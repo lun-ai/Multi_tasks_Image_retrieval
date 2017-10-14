@@ -1,9 +1,9 @@
 # Multi-tasks-Image-retrieval
 
-Caffe ：/home/cuiyan/lun/docomo_hashing/DSH/
-Script Code ：/home/cuiyan/lun/docomo_hashing/DSH/scripts/docomo/
-Docomo test Data ：/home/cuiyan/ting/Data/Docomo/cloth_data/
-Docomo train Data: /home/cuiyan/lun/docomo_train_image_set/
+- Caffe ：/home/cuiyan/lun/docomo_hashing/DSH/
+- Script Code ：/home/cuiyan/lun/docomo_hashing/DSH/scripts/docomo/
+- Docomo test Data ：/home/cuiyan/ting/Data/Docomo/cloth_data/
+- Docomo train Data: /home/cuiyan/lun/docomo_train_image_set/
 
 There is a brief outline of repository (README.txt) located under the path - /home/cuiyan/lun/docomo_hashing 
 
@@ -14,7 +14,7 @@ There is a brief outline of repository (README.txt) located under the path - /ho
  create_pattern_lmdb.sh               Generate train/test/validation lmdb for pattern data
  create_color_lmdb.sh                 Generate train/test/validation lmdb for color data
  create_type_lmdb.sh                  Generate train/test/validation lmdb for type data
- make_mean.sh			                    prepare binaryproto mean from image dataset
+ make_mean.sh			      prepare binaryproto mean from image dataset
 
 
 2 Train network
