@@ -1,0 +1,2272 @@
+Log file created at: 2017/09/14 13:40:10
+Running on machine: img08
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0914 13:40:10.190476 10855 caffe.cpp:185] Using GPUs 1
+I0914 13:40:10.198293 10855 caffe.cpp:190] GPU 1: GeForce GTX TITAN Black
+I0914 13:40:10.473825 10855 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 1000
+base_lr: 0.0001
+display: 100
+max_iter: 50000
+lr_policy: "multistep"
+gamma: 0.1
+momentum: 0.9
+weight_decay: 0.0004
+snapshot: 1000
+snapshot_prefix: "COLOR/color_alexnet"
+solver_mode: GPU
+device_id: 1
+net: "COLOR/train_alexnet_model.prototxt"
+test_initialization: true
+average_loss: 100
+stepvalue: 12000
+stepvalue: 35000
+stepvalue: 45000
+I0914 13:40:10.474161 10855 solver.cpp:91] Creating training net from net file: COLOR/train_alexnet_model.prototxt
+I0914 13:40:10.486966 10855 net.cpp:313] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I0914 13:40:10.487031 10855 net.cpp:313] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy_at_1_Color
+I0914 13:40:10.487320 10855 net.cpp:49] Initializing net from parameters: 
+name: "docomo_AlexNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    crop_size: 224
+    mean_value: 103.939
+    mean_value: 116.779
+    mean_value: 123.68
+  }
+  data_param {
+    source: "COLOR/color_train_lmdb"
+    batch_size: 30
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "conv1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "norm1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "conv2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "norm2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc6"
+  top: "fc6"
+}
+layer {
+  name: "drop6"
+  type: "Dropout"
+  bottom: "fc6"
+  top: "fc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7"
+  type: "InnerProduct"
+  bottom: "fc6"
+  top: "fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "fc7"
+  top: "fc7"
+}
+layer {
+  name: "drop7"
+  type: "Dropout"
+  bottom: "fc7"
+  top: "fc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc_binary_Color"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc_binary_Color"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 12
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "fc_classification_Color"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc_classification_Color"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 8
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "loss_hashing"
+  type: "HashingLoss"
+  bottom: "fc_binary_Color"
+  bottom: "label"
+  top: "loss_hashing"
+  loss_weight: 0.1
+  hashing_loss_param {
+    bi_margin: 24
+    tradeoff: 0.01
+  }
+}
+layer {
+  name: "loss_classification"
+  type: "SoftmaxWithLoss"
+  bottom: "fc_classification_Color"
+  bottom: "label"
+  top: "loss"
+}
+I0914 13:40:10.488999 10855 layer_factory.hpp:77] Creating layer data
+I0914 13:40:10.489714 10855 net.cpp:91] Creating Layer data
+I0914 13:40:10.489755 10855 net.cpp:399] data -> data
+I0914 13:40:10.489897 10855 net.cpp:399] data -> label
+I0914 13:40:10.502161 10859 db_lmdb.cpp:38] Opened lmdb COLOR/color_train_lmdb
+I0914 13:40:10.612614 10855 data_layer.cpp:41] output data size: 30,3,224,224
+I0914 13:40:10.659086 10855 net.cpp:141] Setting up data
+I0914 13:40:10.659178 10855 net.cpp:148] Top shape: 30 3 224 224 (4515840)
+I0914 13:40:10.659199 10855 net.cpp:148] Top shape: 30 1 1 1 (30)
+I0914 13:40:10.659214 10855 net.cpp:156] Memory required for data: 18063480
+I0914 13:40:10.659238 10855 layer_factory.hpp:77] Creating layer label_data_1_split
+I0914 13:40:10.659270 10855 net.cpp:91] Creating Layer label_data_1_split
+I0914 13:40:10.659291 10855 net.cpp:425] label_data_1_split <- label
+I0914 13:40:10.659324 10855 net.cpp:399] label_data_1_split -> label_data_1_split_0
+I0914 13:40:10.659353 10855 net.cpp:399] label_data_1_split -> label_data_1_split_1
+I0914 13:40:10.659440 10855 net.cpp:141] Setting up label_data_1_split
+I0914 13:40:10.659464 10855 net.cpp:148] Top shape: 30 1 1 1 (30)
+I0914 13:40:10.659482 10855 net.cpp:148] Top shape: 30 1 1 1 (30)
+I0914 13:40:10.659495 10855 net.cpp:156] Memory required for data: 18063720
+I0914 13:40:10.659510 10855 layer_factory.hpp:77] Creating layer conv1
+I0914 13:40:10.659553 10855 net.cpp:91] Creating Layer conv1
+I0914 13:40:10.659577 10855 net.cpp:425] conv1 <- data
+I0914 13:40:10.659597 10855 net.cpp:399] conv1 -> conv1
+I0914 13:40:10.662781 10855 net.cpp:141] Setting up conv1
+I0914 13:40:10.662856 10855 net.cpp:148] Top shape: 30 96 54 54 (8398080)
+I0914 13:40:10.662875 10855 net.cpp:156] Memory required for data: 51656040
+I0914 13:40:10.662906 10855 layer_factory.hpp:77] Creating layer relu1
+I0914 13:40:10.662931 10855 net.cpp:91] Creating Layer relu1
+I0914 13:40:10.662950 10855 net.cpp:425] relu1 <- conv1
+I0914 13:40:10.662967 10855 net.cpp:386] relu1 -> conv1 (in-place)
+I0914 13:40:10.662991 10855 net.cpp:141] Setting up relu1
+I0914 13:40:10.663007 10855 net.cpp:148] Top shape: 30 96 54 54 (8398080)
+I0914 13:40:10.663022 10855 net.cpp:156] Memory required for data: 85248360
+I0914 13:40:10.663036 10855 layer_factory.hpp:77] Creating layer norm1
+I0914 13:40:10.663056 10855 net.cpp:91] Creating Layer norm1
+I0914 13:40:10.663070 10855 net.cpp:425] norm1 <- conv1
+I0914 13:40:10.663094 10855 net.cpp:399] norm1 -> norm1
+I0914 13:40:10.663164 10855 net.cpp:141] Setting up norm1
+I0914 13:40:10.663188 10855 net.cpp:148] Top shape: 30 96 54 54 (8398080)
+I0914 13:40:10.663203 10855 net.cpp:156] Memory required for data: 118840680
+I0914 13:40:10.663216 10855 layer_factory.hpp:77] Creating layer pool1
+I0914 13:40:10.663240 10855 net.cpp:91] Creating Layer pool1
+I0914 13:40:10.663259 10855 net.cpp:425] pool1 <- norm1
+I0914 13:40:10.663283 10855 net.cpp:399] pool1 -> pool1
+I0914 13:40:10.663352 10855 net.cpp:141] Setting up pool1
+I0914 13:40:10.663379 10855 net.cpp:148] Top shape: 30 96 27 27 (2099520)
+I0914 13:40:10.663394 10855 net.cpp:156] Memory required for data: 127238760
+I0914 13:40:10.663409 10855 layer_factory.hpp:77] Creating layer conv2
+I0914 13:40:10.663434 10855 net.cpp:91] Creating Layer conv2
+I0914 13:40:10.663455 10855 net.cpp:425] conv2 <- pool1
+I0914 13:40:10.663478 10855 net.cpp:399] conv2 -> conv2
+I0914 13:40:10.676470 10855 net.cpp:141] Setting up conv2
+I0914 13:40:10.676503 10855 net.cpp:148] Top shape: 30 256 27 27 (5598720)
+I0914 13:40:10.676518 10855 net.cpp:156] Memory required for data: 149633640
+I0914 13:40:10.676542 10855 layer_factory.hpp:77] Creating layer relu2
+I0914 13:40:10.676563 10855 net.cpp:91] Creating Layer relu2
+I0914 13:40:10.676584 10855 net.cpp:425] relu2 <- conv2
+I0914 13:40:10.676600 10855 net.cpp:386] relu2 -> conv2 (in-place)
+I0914 13:40:10.676620 10855 net.cpp:141] Setting up relu2
+I0914 13:40:10.676636 10855 net.cpp:148] Top shape: 30 256 27 27 (5598720)
+I0914 13:40:10.676651 10855 net.cpp:156] Memory required for data: 172028520
+I0914 13:40:10.676664 10855 layer_factory.hpp:77] Creating layer norm2
+I0914 13:40:10.676683 10855 net.cpp:91] Creating Layer norm2
+I0914 13:40:10.676697 10855 net.cpp:425] norm2 <- conv2
+I0914 13:40:10.676718 10855 net.cpp:399] norm2 -> norm2
+I0914 13:40:10.676782 10855 net.cpp:141] Setting up norm2
+I0914 13:40:10.676806 10855 net.cpp:148] Top shape: 30 256 27 27 (5598720)
+I0914 13:40:10.676820 10855 net.cpp:156] Memory required for data: 194423400
+I0914 13:40:10.676834 10855 layer_factory.hpp:77] Creating layer pool2
+I0914 13:40:10.676852 10855 net.cpp:91] Creating Layer pool2
+I0914 13:40:10.676867 10855 net.cpp:425] pool2 <- norm2
+I0914 13:40:10.676887 10855 net.cpp:399] pool2 -> pool2
+I0914 13:40:10.676940 10855 net.cpp:141] Setting up pool2
+I0914 13:40:10.676964 10855 net.cpp:148] Top shape: 30 256 13 13 (1297920)
+I0914 13:40:10.676980 10855 net.cpp:156] Memory required for data: 199615080
+I0914 13:40:10.676993 10855 layer_factory.hpp:77] Creating layer conv3
+I0914 13:40:10.677014 10855 net.cpp:91] Creating Layer conv3
+I0914 13:40:10.677033 10855 net.cpp:425] conv3 <- pool2
+I0914 13:40:10.677053 10855 net.cpp:399] conv3 -> conv3
+I0914 13:40:10.681720 10860 blocking_queue.cpp:50] Waiting for data
+I0914 13:40:10.712389 10855 net.cpp:141] Setting up conv3
+I0914 13:40:10.712433 10855 net.cpp:148] Top shape: 30 384 13 13 (1946880)
+I0914 13:40:10.712450 10855 net.cpp:156] Memory required for data: 207402600
+I0914 13:40:10.712473 10855 layer_factory.hpp:77] Creating layer relu3
+I0914 13:40:10.712497 10855 net.cpp:91] Creating Layer relu3
+I0914 13:40:10.712512 10855 net.cpp:425] relu3 <- conv3
+I0914 13:40:10.712535 10855 net.cpp:386] relu3 -> conv3 (in-place)
+I0914 13:40:10.712584 10855 net.cpp:141] Setting up relu3
+I0914 13:40:10.712604 10855 net.cpp:148] Top shape: 30 384 13 13 (1946880)
+I0914 13:40:10.712618 10855 net.cpp:156] Memory required for data: 215190120
+I0914 13:40:10.712632 10855 layer_factory.hpp:77] Creating layer conv4
+I0914 13:40:10.712658 10855 net.cpp:91] Creating Layer conv4
+I0914 13:40:10.712677 10855 net.cpp:425] conv4 <- conv3
+I0914 13:40:10.712695 10855 net.cpp:399] conv4 -> conv4
+I0914 13:40:10.739384 10855 net.cpp:141] Setting up conv4
+I0914 13:40:10.739426 10855 net.cpp:148] Top shape: 30 384 13 13 (1946880)
+I0914 13:40:10.739442 10855 net.cpp:156] Memory required for data: 222977640
+I0914 13:40:10.739461 10855 layer_factory.hpp:77] Creating layer relu4
+I0914 13:40:10.739481 10855 net.cpp:91] Creating Layer relu4
+I0914 13:40:10.739496 10855 net.cpp:425] relu4 <- conv4
+I0914 13:40:10.739516 10855 net.cpp:386] relu4 -> conv4 (in-place)
+I0914 13:40:10.739537 10855 net.cpp:141] Setting up relu4
+I0914 13:40:10.739557 10855 net.cpp:148] Top shape: 30 384 13 13 (1946880)
+I0914 13:40:10.739573 10855 net.cpp:156] Memory required for data: 230765160
+I0914 13:40:10.739586 10855 layer_factory.hpp:77] Creating layer conv5
+I0914 13:40:10.739611 10855 net.cpp:91] Creating Layer conv5
+I0914 13:40:10.739626 10855 net.cpp:425] conv5 <- conv4
+I0914 13:40:10.739645 10855 net.cpp:399] conv5 -> conv5
+I0914 13:40:10.757369 10855 net.cpp:141] Setting up conv5
+I0914 13:40:10.757400 10855 net.cpp:148] Top shape: 30 256 13 13 (1297920)
+I0914 13:40:10.757417 10855 net.cpp:156] Memory required for data: 235956840
+I0914 13:40:10.757441 10855 layer_factory.hpp:77] Creating layer relu5
+I0914 13:40:10.757462 10855 net.cpp:91] Creating Layer relu5
+I0914 13:40:10.757477 10855 net.cpp:425] relu5 <- conv5
+I0914 13:40:10.757496 10855 net.cpp:386] relu5 -> conv5 (in-place)
+I0914 13:40:10.757516 10855 net.cpp:141] Setting up relu5
+I0914 13:40:10.757534 10855 net.cpp:148] Top shape: 30 256 13 13 (1297920)
+I0914 13:40:10.757552 10855 net.cpp:156] Memory required for data: 241148520
+I0914 13:40:10.757566 10855 layer_factory.hpp:77] Creating layer pool5
+I0914 13:40:10.757587 10855 net.cpp:91] Creating Layer pool5
+I0914 13:40:10.757601 10855 net.cpp:425] pool5 <- conv5
+I0914 13:40:10.757622 10855 net.cpp:399] pool5 -> pool5
+I0914 13:40:10.757685 10855 net.cpp:141] Setting up pool5
+I0914 13:40:10.757712 10855 net.cpp:148] Top shape: 30 256 6 6 (276480)
+I0914 13:40:10.757728 10855 net.cpp:156] Memory required for data: 242254440
+I0914 13:40:10.757742 10855 layer_factory.hpp:77] Creating layer fc6
+I0914 13:40:10.757771 10855 net.cpp:91] Creating Layer fc6
+I0914 13:40:10.757789 10855 net.cpp:425] fc6 <- pool5
+I0914 13:40:10.757807 10855 net.cpp:399] fc6 -> fc6
+I0914 13:40:12.223832 10855 net.cpp:141] Setting up fc6
+I0914 13:40:12.223922 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.223942 10855 net.cpp:156] Memory required for data: 242745960
+I0914 13:40:12.223974 10855 layer_factory.hpp:77] Creating layer relu6
+I0914 13:40:12.224004 10855 net.cpp:91] Creating Layer relu6
+I0914 13:40:12.224030 10855 net.cpp:425] relu6 <- fc6
+I0914 13:40:12.224063 10855 net.cpp:386] relu6 -> fc6 (in-place)
+I0914 13:40:12.224092 10855 net.cpp:141] Setting up relu6
+I0914 13:40:12.224109 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.224123 10855 net.cpp:156] Memory required for data: 243237480
+I0914 13:40:12.224138 10855 layer_factory.hpp:77] Creating layer drop6
+I0914 13:40:12.224160 10855 net.cpp:91] Creating Layer drop6
+I0914 13:40:12.224175 10855 net.cpp:425] drop6 <- fc6
+I0914 13:40:12.224191 10855 net.cpp:386] drop6 -> fc6 (in-place)
+I0914 13:40:12.224265 10855 net.cpp:141] Setting up drop6
+I0914 13:40:12.224289 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.224304 10855 net.cpp:156] Memory required for data: 243729000
+I0914 13:40:12.224318 10855 layer_factory.hpp:77] Creating layer fc7
+I0914 13:40:12.224344 10855 net.cpp:91] Creating Layer fc7
+I0914 13:40:12.224365 10855 net.cpp:425] fc7 <- fc6
+I0914 13:40:12.224385 10855 net.cpp:399] fc7 -> fc7
+I0914 13:40:12.873208 10855 net.cpp:141] Setting up fc7
+I0914 13:40:12.873286 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.873303 10855 net.cpp:156] Memory required for data: 244220520
+I0914 13:40:12.873327 10855 layer_factory.hpp:77] Creating layer relu7
+I0914 13:40:12.873350 10855 net.cpp:91] Creating Layer relu7
+I0914 13:40:12.873368 10855 net.cpp:425] relu7 <- fc7
+I0914 13:40:12.873389 10855 net.cpp:386] relu7 -> fc7 (in-place)
+I0914 13:40:12.873415 10855 net.cpp:141] Setting up relu7
+I0914 13:40:12.873437 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.873451 10855 net.cpp:156] Memory required for data: 244712040
+I0914 13:40:12.873467 10855 layer_factory.hpp:77] Creating layer drop7
+I0914 13:40:12.873486 10855 net.cpp:91] Creating Layer drop7
+I0914 13:40:12.873499 10855 net.cpp:425] drop7 <- fc7
+I0914 13:40:12.873519 10855 net.cpp:386] drop7 -> fc7 (in-place)
+I0914 13:40:12.873561 10855 net.cpp:141] Setting up drop7
+I0914 13:40:12.873584 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.873600 10855 net.cpp:156] Memory required for data: 245203560
+I0914 13:40:12.873613 10855 layer_factory.hpp:77] Creating layer fc7_drop7_0_split
+I0914 13:40:12.873641 10855 net.cpp:91] Creating Layer fc7_drop7_0_split
+I0914 13:40:12.873657 10855 net.cpp:425] fc7_drop7_0_split <- fc7
+I0914 13:40:12.873679 10855 net.cpp:399] fc7_drop7_0_split -> fc7_drop7_0_split_0
+I0914 13:40:12.873715 10855 net.cpp:399] fc7_drop7_0_split -> fc7_drop7_0_split_1
+I0914 13:40:12.873775 10855 net.cpp:141] Setting up fc7_drop7_0_split
+I0914 13:40:12.873802 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.873822 10855 net.cpp:148] Top shape: 30 4096 (122880)
+I0914 13:40:12.873836 10855 net.cpp:156] Memory required for data: 246186600
+I0914 13:40:12.873852 10855 layer_factory.hpp:77] Creating layer fc_binary_Color
+I0914 13:40:12.873872 10855 net.cpp:91] Creating Layer fc_binary_Color
+I0914 13:40:12.873888 10855 net.cpp:425] fc_binary_Color <- fc7_drop7_0_split_0
+I0914 13:40:12.873904 10855 net.cpp:399] fc_binary_Color -> fc_binary_Color
+I0914 13:40:12.875890 10855 net.cpp:141] Setting up fc_binary_Color
+I0914 13:40:12.875929 10855 net.cpp:148] Top shape: 30 12 (360)
+I0914 13:40:12.875944 10855 net.cpp:156] Memory required for data: 246188040
+I0914 13:40:12.875962 10855 layer_factory.hpp:77] Creating layer fc_classification_Color
+I0914 13:40:12.875988 10855 net.cpp:91] Creating Layer fc_classification_Color
+I0914 13:40:12.876003 10855 net.cpp:425] fc_classification_Color <- fc7_drop7_0_split_1
+I0914 13:40:12.876021 10855 net.cpp:399] fc_classification_Color -> fc_classification_Color
+I0914 13:40:12.877355 10855 net.cpp:141] Setting up fc_classification_Color
+I0914 13:40:12.877394 10855 net.cpp:148] Top shape: 30 8 (240)
+I0914 13:40:12.877409 10855 net.cpp:156] Memory required for data: 246189000
+I0914 13:40:12.877432 10855 layer_factory.hpp:77] Creating layer loss_hashing
+I0914 13:40:12.877460 10855 net.cpp:91] Creating Layer loss_hashing
+I0914 13:40:12.877476 10855 net.cpp:425] loss_hashing <- fc_binary_Color
+I0914 13:40:12.877492 10855 net.cpp:425] loss_hashing <- label_data_1_split_0
+I0914 13:40:12.877511 10855 net.cpp:399] loss_hashing -> loss_hashing
+I0914 13:40:12.877614 10855 net.cpp:141] Setting up loss_hashing
+I0914 13:40:12.877642 10855 net.cpp:148] Top shape: (1)
+I0914 13:40:12.877658 10855 net.cpp:151]     with loss weight 0.1
+I0914 13:40:12.877732 10855 net.cpp:156] Memory required for data: 246189004
+I0914 13:40:12.877749 10855 layer_factory.hpp:77] Creating layer loss_classification
+I0914 13:40:12.877770 10855 net.cpp:91] Creating Layer loss_classification
+I0914 13:40:12.877792 10855 net.cpp:425] loss_classification <- fc_classification_Color
+I0914 13:40:12.877810 10855 net.cpp:425] loss_classification <- label_data_1_split_1
+I0914 13:40:12.877830 10855 net.cpp:399] loss_classification -> loss
+I0914 13:40:12.877854 10855 layer_factory.hpp:77] Creating layer loss_classification
+I0914 13:40:12.877984 10855 net.cpp:141] Setting up loss_classification
+I0914 13:40:12.878008 10855 net.cpp:148] Top shape: (1)
+I0914 13:40:12.878058 10855 net.cpp:151]     with loss weight 1
+I0914 13:40:12.878082 10855 net.cpp:156] Memory required for data: 246189008
+I0914 13:40:12.878096 10855 net.cpp:217] loss_classification needs backward computation.
+I0914 13:40:12.878110 10855 net.cpp:217] loss_hashing needs backward computation.
+I0914 13:40:12.878125 10855 net.cpp:217] fc_classification_Color needs backward computation.
+I0914 13:40:12.878139 10855 net.cpp:217] fc_binary_Color needs backward computation.
+I0914 13:40:12.878154 10855 net.cpp:217] fc7_drop7_0_split needs backward computation.
+I0914 13:40:12.878171 10855 net.cpp:217] drop7 needs backward computation.
+I0914 13:40:12.878185 10855 net.cpp:217] relu7 needs backward computation.
+I0914 13:40:12.878201 10855 net.cpp:217] fc7 needs backward computation.
+I0914 13:40:12.878214 10855 net.cpp:217] drop6 needs backward computation.
+I0914 13:40:12.878227 10855 net.cpp:217] relu6 needs backward computation.
+I0914 13:40:12.878240 10855 net.cpp:217] fc6 needs backward computation.
+I0914 13:40:12.878255 10855 net.cpp:217] pool5 needs backward computation.
+I0914 13:40:12.878270 10855 net.cpp:217] relu5 needs backward computation.
+I0914 13:40:12.878284 10855 net.cpp:217] conv5 needs backward computation.
+I0914 13:40:12.878298 10855 net.cpp:217] relu4 needs backward computation.
+I0914 13:40:12.878312 10855 net.cpp:217] conv4 needs backward computation.
+I0914 13:40:12.878326 10855 net.cpp:217] relu3 needs backward computation.
+I0914 13:40:12.878340 10855 net.cpp:217] conv3 needs backward computation.
+I0914 13:40:12.878355 10855 net.cpp:217] pool2 needs backward computation.
+I0914 13:40:12.878371 10855 net.cpp:217] norm2 needs backward computation.
+I0914 13:40:12.878386 10855 net.cpp:217] relu2 needs backward computation.
+I0914 13:40:12.878399 10855 net.cpp:217] conv2 needs backward computation.
+I0914 13:40:12.878412 10855 net.cpp:217] pool1 needs backward computation.
+I0914 13:40:12.878427 10855 net.cpp:217] norm1 needs backward computation.
+I0914 13:40:12.878442 10855 net.cpp:217] relu1 needs backward computation.
+I0914 13:40:12.878456 10855 net.cpp:217] conv1 needs backward computation.
+I0914 13:40:12.878471 10855 net.cpp:219] label_data_1_split does not need backward computation.
+I0914 13:40:12.878486 10855 net.cpp:219] data does not need backward computation.
+I0914 13:40:12.878500 10855 net.cpp:261] This network produces output loss
+I0914 13:40:12.878515 10855 net.cpp:261] This network produces output loss_hashing
+I0914 13:40:12.878549 10855 net.cpp:274] Network initialization done.
+I0914 13:40:12.879465 10855 solver.cpp:181] Creating test net (#0) specified by net file: COLOR/train_alexnet_model.prototxt
+I0914 13:40:12.879534 10855 net.cpp:313] The NetState phase (1) differed from the phase (0) specified by a rule in layer data
+I0914 13:40:12.879812 10855 net.cpp:49] Initializing net from parameters: 
+name: "docomo_AlexNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mirror: false
+    crop_size: 224
+    mean_value: 103.939
+    mean_value: 116.779
+    mean_value: 123.68
+  }
+  data_param {
+    source: "COLOR/color_test_lmdb"
+    batch_size: 40
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "conv1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "norm1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "conv2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "norm2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc6"
+  top: "fc6"
+}
+layer {
+  name: "drop6"
+  type: "Dropout"
+  bottom: "fc6"
+  top: "fc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7"
+  type: "InnerProduct"
+  bottom: "fc6"
+  top: "fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "fc7"
+  top: "fc7"
+}
+layer {
+  name: "drop7"
+  type: "Dropout"
+  bottom: "fc7"
+  top: "fc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc_binary_Color"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc_binary_Color"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 12
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "fc_classification_Color"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc_classification_Color"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 8
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "accuracy_at_1_Color"
+  type: "Accuracy"
+  bottom: "fc_classification_Color"
+  bottom: "label"
+  top: "accuracy_at_1_Color"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss_hashing"
+  type: "HashingLoss"
+  bottom: "fc_binary_Color"
+  bottom: "label"
+  top: "loss_hashing"
+  loss_weight: 0.1
+  hashing_loss_param {
+    bi_margin: 24
+    tradeoff: 0.01
+  }
+}
+layer {
+  name: "loss_classification"
+  type: "SoftmaxWithLoss"
+  bottom: "fc_classification_Color"
+  bottom: "label"
+  top: "loss"
+}
+I0914 13:40:12.881418 10855 layer_factory.hpp:77] Creating layer data
+I0914 13:40:12.881556 10855 net.cpp:91] Creating Layer data
+I0914 13:40:12.881587 10855 net.cpp:399] data -> data
+I0914 13:40:12.881610 10855 net.cpp:399] data -> label
+I0914 13:40:12.920428 10861 db_lmdb.cpp:38] Opened lmdb COLOR/color_test_lmdb
+I0914 13:40:13.013432 10855 data_layer.cpp:41] output data size: 40,3,224,224
+I0914 13:40:13.068819 10855 net.cpp:141] Setting up data
+I0914 13:40:13.068914 10855 net.cpp:148] Top shape: 40 3 224 224 (6021120)
+I0914 13:40:13.068935 10855 net.cpp:148] Top shape: 40 1 1 1 (40)
+I0914 13:40:13.068950 10855 net.cpp:156] Memory required for data: 24084640
+I0914 13:40:13.068969 10855 layer_factory.hpp:77] Creating layer label_data_1_split
+I0914 13:40:13.069000 10855 net.cpp:91] Creating Layer label_data_1_split
+I0914 13:40:13.069016 10855 net.cpp:425] label_data_1_split <- label
+I0914 13:40:13.069039 10855 net.cpp:399] label_data_1_split -> label_data_1_split_0
+I0914 13:40:13.069063 10855 net.cpp:399] label_data_1_split -> label_data_1_split_1
+I0914 13:40:13.069083 10855 net.cpp:399] label_data_1_split -> label_data_1_split_2
+I0914 13:40:13.069173 10855 net.cpp:141] Setting up label_data_1_split
+I0914 13:40:13.069197 10855 net.cpp:148] Top shape: 40 1 1 1 (40)
+I0914 13:40:13.069213 10855 net.cpp:148] Top shape: 40 1 1 1 (40)
+I0914 13:40:13.069229 10855 net.cpp:148] Top shape: 40 1 1 1 (40)
+I0914 13:40:13.069243 10855 net.cpp:156] Memory required for data: 24085120
+I0914 13:40:13.069258 10855 layer_factory.hpp:77] Creating layer conv1
+I0914 13:40:13.069291 10855 net.cpp:91] Creating Layer conv1
+I0914 13:40:13.069309 10855 net.cpp:425] conv1 <- data
+I0914 13:40:13.069329 10855 net.cpp:399] conv1 -> conv1
+I0914 13:40:13.072263 10855 net.cpp:141] Setting up conv1
+I0914 13:40:13.072301 10855 net.cpp:148] Top shape: 40 96 54 54 (11197440)
+I0914 13:40:13.072319 10855 net.cpp:156] Memory required for data: 68874880
+I0914 13:40:13.072343 10855 layer_factory.hpp:77] Creating layer relu1
+I0914 13:40:13.072365 10855 net.cpp:91] Creating Layer relu1
+I0914 13:40:13.072379 10855 net.cpp:425] relu1 <- conv1
+I0914 13:40:13.072399 10855 net.cpp:386] relu1 -> conv1 (in-place)
+I0914 13:40:13.072424 10855 net.cpp:141] Setting up relu1
+I0914 13:40:13.072443 10855 net.cpp:148] Top shape: 40 96 54 54 (11197440)
+I0914 13:40:13.072456 10855 net.cpp:156] Memory required for data: 113664640
+I0914 13:40:13.072471 10855 layer_factory.hpp:77] Creating layer norm1
+I0914 13:40:13.072492 10855 net.cpp:91] Creating Layer norm1
+I0914 13:40:13.072509 10855 net.cpp:425] norm1 <- conv1
+I0914 13:40:13.072530 10855 net.cpp:399] norm1 -> norm1
+I0914 13:40:13.072594 10855 net.cpp:141] Setting up norm1
+I0914 13:40:13.072618 10855 net.cpp:148] Top shape: 40 96 54 54 (11197440)
+I0914 13:40:13.072633 10855 net.cpp:156] Memory required for data: 158454400
+I0914 13:40:13.072649 10855 layer_factory.hpp:77] Creating layer pool1
+I0914 13:40:13.072671 10855 net.cpp:91] Creating Layer pool1
+I0914 13:40:13.072693 10855 net.cpp:425] pool1 <- norm1
+I0914 13:40:13.072710 10855 net.cpp:399] pool1 -> pool1
+I0914 13:40:13.072773 10855 net.cpp:141] Setting up pool1
+I0914 13:40:13.072803 10855 net.cpp:148] Top shape: 40 96 27 27 (2799360)
+I0914 13:40:13.072818 10855 net.cpp:156] Memory required for data: 169651840
+I0914 13:40:13.072834 10855 layer_factory.hpp:77] Creating layer conv2
+I0914 13:40:13.072859 10855 net.cpp:91] Creating Layer conv2
+I0914 13:40:13.072880 10855 net.cpp:425] conv2 <- pool1
+I0914 13:40:13.072903 10855 net.cpp:399] conv2 -> conv2
+I0914 13:40:13.085260 10855 net.cpp:141] Setting up conv2
+I0914 13:40:13.085309 10855 net.cpp:148] Top shape: 40 256 27 27 (7464960)
+I0914 13:40:13.085366 10855 net.cpp:156] Memory required for data: 199511680
+I0914 13:40:13.085391 10855 layer_factory.hpp:77] Creating layer relu2
+I0914 13:40:13.085410 10855 net.cpp:91] Creating Layer relu2
+I0914 13:40:13.085425 10855 net.cpp:425] relu2 <- conv2
+I0914 13:40:13.085445 10855 net.cpp:386] relu2 -> conv2 (in-place)
+I0914 13:40:13.085465 10855 net.cpp:141] Setting up relu2
+I0914 13:40:13.085482 10855 net.cpp:148] Top shape: 40 256 27 27 (7464960)
+I0914 13:40:13.085497 10855 net.cpp:156] Memory required for data: 229371520
+I0914 13:40:13.085517 10855 layer_factory.hpp:77] Creating layer norm2
+I0914 13:40:13.085541 10855 net.cpp:91] Creating Layer norm2
+I0914 13:40:13.085556 10855 net.cpp:425] norm2 <- conv2
+I0914 13:40:13.085573 10855 net.cpp:399] norm2 -> norm2
+I0914 13:40:13.085641 10855 net.cpp:141] Setting up norm2
+I0914 13:40:13.085665 10855 net.cpp:148] Top shape: 40 256 27 27 (7464960)
+I0914 13:40:13.085680 10855 net.cpp:156] Memory required for data: 259231360
+I0914 13:40:13.085693 10855 layer_factory.hpp:77] Creating layer pool2
+I0914 13:40:13.085711 10855 net.cpp:91] Creating Layer pool2
+I0914 13:40:13.085726 10855 net.cpp:425] pool2 <- norm2
+I0914 13:40:13.085743 10855 net.cpp:399] pool2 -> pool2
+I0914 13:40:13.085804 10855 net.cpp:141] Setting up pool2
+I0914 13:40:13.085829 10855 net.cpp:148] Top shape: 40 256 13 13 (1730560)
+I0914 13:40:13.085842 10855 net.cpp:156] Memory required for data: 266153600
+I0914 13:40:13.085856 10855 layer_factory.hpp:77] Creating layer conv3
+I0914 13:40:13.085891 10855 net.cpp:91] Creating Layer conv3
+I0914 13:40:13.085911 10855 net.cpp:425] conv3 <- pool2
+I0914 13:40:13.085932 10855 net.cpp:399] conv3 -> conv3
+I0914 13:40:13.120805 10855 net.cpp:141] Setting up conv3
+I0914 13:40:13.120841 10855 net.cpp:148] Top shape: 40 384 13 13 (2595840)
+I0914 13:40:13.120857 10855 net.cpp:156] Memory required for data: 276536960
+I0914 13:40:13.120878 10855 layer_factory.hpp:77] Creating layer relu3
+I0914 13:40:13.120898 10855 net.cpp:91] Creating Layer relu3
+I0914 13:40:13.120913 10855 net.cpp:425] relu3 <- conv3
+I0914 13:40:13.120929 10855 net.cpp:386] relu3 -> conv3 (in-place)
+I0914 13:40:13.120949 10855 net.cpp:141] Setting up relu3
+I0914 13:40:13.120970 10855 net.cpp:148] Top shape: 40 384 13 13 (2595840)
+I0914 13:40:13.120983 10855 net.cpp:156] Memory required for data: 286920320
+I0914 13:40:13.120999 10855 layer_factory.hpp:77] Creating layer conv4
+I0914 13:40:13.121028 10855 net.cpp:91] Creating Layer conv4
+I0914 13:40:13.121044 10855 net.cpp:425] conv4 <- conv3
+I0914 13:40:13.121063 10855 net.cpp:399] conv4 -> conv4
+I0914 13:40:13.147476 10855 net.cpp:141] Setting up conv4
+I0914 13:40:13.147508 10855 net.cpp:148] Top shape: 40 384 13 13 (2595840)
+I0914 13:40:13.147523 10855 net.cpp:156] Memory required for data: 297303680
+I0914 13:40:13.147542 10855 layer_factory.hpp:77] Creating layer relu4
+I0914 13:40:13.147560 10855 net.cpp:91] Creating Layer relu4
+I0914 13:40:13.147575 10855 net.cpp:425] relu4 <- conv4
+I0914 13:40:13.147594 10855 net.cpp:386] relu4 -> conv4 (in-place)
+I0914 13:40:13.147614 10855 net.cpp:141] Setting up relu4
+I0914 13:40:13.147635 10855 net.cpp:148] Top shape: 40 384 13 13 (2595840)
+I0914 13:40:13.147650 10855 net.cpp:156] Memory required for data: 307687040
+I0914 13:40:13.147663 10855 layer_factory.hpp:77] Creating layer conv5
+I0914 13:40:13.147683 10855 net.cpp:91] Creating Layer conv5
+I0914 13:40:13.147699 10855 net.cpp:425] conv5 <- conv4
+I0914 13:40:13.147720 10855 net.cpp:399] conv5 -> conv5
+I0914 13:40:13.165551 10855 net.cpp:141] Setting up conv5
+I0914 13:40:13.165596 10855 net.cpp:148] Top shape: 40 256 13 13 (1730560)
+I0914 13:40:13.165612 10855 net.cpp:156] Memory required for data: 314609280
+I0914 13:40:13.165644 10855 layer_factory.hpp:77] Creating layer relu5
+I0914 13:40:13.165664 10855 net.cpp:91] Creating Layer relu5
+I0914 13:40:13.165679 10855 net.cpp:425] relu5 <- conv5
+I0914 13:40:13.165700 10855 net.cpp:386] relu5 -> conv5 (in-place)
+I0914 13:40:13.165724 10855 net.cpp:141] Setting up relu5
+I0914 13:40:13.165765 10855 net.cpp:148] Top shape: 40 256 13 13 (1730560)
+I0914 13:40:13.165779 10855 net.cpp:156] Memory required for data: 321531520
+I0914 13:40:13.165796 10855 layer_factory.hpp:77] Creating layer pool5
+I0914 13:40:13.165814 10855 net.cpp:91] Creating Layer pool5
+I0914 13:40:13.165829 10855 net.cpp:425] pool5 <- conv5
+I0914 13:40:13.165845 10855 net.cpp:399] pool5 -> pool5
+I0914 13:40:13.165915 10855 net.cpp:141] Setting up pool5
+I0914 13:40:13.165940 10855 net.cpp:148] Top shape: 40 256 6 6 (368640)
+I0914 13:40:13.165954 10855 net.cpp:156] Memory required for data: 323006080
+I0914 13:40:13.165968 10855 layer_factory.hpp:77] Creating layer fc6
+I0914 13:40:13.165990 10855 net.cpp:91] Creating Layer fc6
+I0914 13:40:13.166009 10855 net.cpp:425] fc6 <- pool5
+I0914 13:40:13.166028 10855 net.cpp:399] fc6 -> fc6
+I0914 13:40:14.648530 10855 net.cpp:141] Setting up fc6
+I0914 13:40:14.648591 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:14.648602 10855 net.cpp:156] Memory required for data: 323661440
+I0914 13:40:14.648628 10855 layer_factory.hpp:77] Creating layer relu6
+I0914 13:40:14.648650 10855 net.cpp:91] Creating Layer relu6
+I0914 13:40:14.648663 10855 net.cpp:425] relu6 <- fc6
+I0914 13:40:14.648679 10855 net.cpp:386] relu6 -> fc6 (in-place)
+I0914 13:40:14.648695 10855 net.cpp:141] Setting up relu6
+I0914 13:40:14.648705 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:14.648711 10855 net.cpp:156] Memory required for data: 324316800
+I0914 13:40:14.648720 10855 layer_factory.hpp:77] Creating layer drop6
+I0914 13:40:14.648733 10855 net.cpp:91] Creating Layer drop6
+I0914 13:40:14.648741 10855 net.cpp:425] drop6 <- fc6
+I0914 13:40:14.648753 10855 net.cpp:386] drop6 -> fc6 (in-place)
+I0914 13:40:14.648798 10855 net.cpp:141] Setting up drop6
+I0914 13:40:14.648813 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:14.648820 10855 net.cpp:156] Memory required for data: 324972160
+I0914 13:40:14.648828 10855 layer_factory.hpp:77] Creating layer fc7
+I0914 13:40:14.648844 10855 net.cpp:91] Creating Layer fc7
+I0914 13:40:14.648851 10855 net.cpp:425] fc7 <- fc6
+I0914 13:40:14.648874 10855 net.cpp:399] fc7 -> fc7
+I0914 13:40:15.274219 10855 net.cpp:141] Setting up fc7
+I0914 13:40:15.274297 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:15.274313 10855 net.cpp:156] Memory required for data: 325627520
+I0914 13:40:15.274338 10855 layer_factory.hpp:77] Creating layer relu7
+I0914 13:40:15.274360 10855 net.cpp:91] Creating Layer relu7
+I0914 13:40:15.274376 10855 net.cpp:425] relu7 <- fc7
+I0914 13:40:15.274397 10855 net.cpp:386] relu7 -> fc7 (in-place)
+I0914 13:40:15.274421 10855 net.cpp:141] Setting up relu7
+I0914 13:40:15.274436 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:15.274451 10855 net.cpp:156] Memory required for data: 326282880
+I0914 13:40:15.274477 10855 layer_factory.hpp:77] Creating layer drop7
+I0914 13:40:15.274503 10855 net.cpp:91] Creating Layer drop7
+I0914 13:40:15.274523 10855 net.cpp:425] drop7 <- fc7
+I0914 13:40:15.274538 10855 net.cpp:386] drop7 -> fc7 (in-place)
+I0914 13:40:15.274585 10855 net.cpp:141] Setting up drop7
+I0914 13:40:15.274608 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:15.274622 10855 net.cpp:156] Memory required for data: 326938240
+I0914 13:40:15.274636 10855 layer_factory.hpp:77] Creating layer fc7_drop7_0_split
+I0914 13:40:15.274653 10855 net.cpp:91] Creating Layer fc7_drop7_0_split
+I0914 13:40:15.274672 10855 net.cpp:425] fc7_drop7_0_split <- fc7
+I0914 13:40:15.274689 10855 net.cpp:399] fc7_drop7_0_split -> fc7_drop7_0_split_0
+I0914 13:40:15.274708 10855 net.cpp:399] fc7_drop7_0_split -> fc7_drop7_0_split_1
+I0914 13:40:15.274765 10855 net.cpp:141] Setting up fc7_drop7_0_split
+I0914 13:40:15.274786 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:15.274802 10855 net.cpp:148] Top shape: 40 4096 (163840)
+I0914 13:40:15.274816 10855 net.cpp:156] Memory required for data: 328248960
+I0914 13:40:15.274829 10855 layer_factory.hpp:77] Creating layer fc_binary_Color
+I0914 13:40:15.274854 10855 net.cpp:91] Creating Layer fc_binary_Color
+I0914 13:40:15.274912 10855 net.cpp:425] fc_binary_Color <- fc7_drop7_0_split_0
+I0914 13:40:15.274936 10855 net.cpp:399] fc_binary_Color -> fc_binary_Color
+I0914 13:40:15.276876 10855 net.cpp:141] Setting up fc_binary_Color
+I0914 13:40:15.276901 10855 net.cpp:148] Top shape: 40 12 (480)
+I0914 13:40:15.276928 10855 net.cpp:156] Memory required for data: 328250880
+I0914 13:40:15.276947 10855 layer_factory.hpp:77] Creating layer fc_classification_Color
+I0914 13:40:15.276969 10855 net.cpp:91] Creating Layer fc_classification_Color
+I0914 13:40:15.276985 10855 net.cpp:425] fc_classification_Color <- fc7_drop7_0_split_1
+I0914 13:40:15.277003 10855 net.cpp:399] fc_classification_Color -> fc_classification_Color
+I0914 13:40:15.278389 10855 net.cpp:141] Setting up fc_classification_Color
+I0914 13:40:15.278414 10855 net.cpp:148] Top shape: 40 8 (320)
+I0914 13:40:15.278439 10855 net.cpp:156] Memory required for data: 328252160
+I0914 13:40:15.278467 10855 layer_factory.hpp:77] Creating layer fc_classification_Color_fc_classification_Color_0_split
+I0914 13:40:15.278488 10855 net.cpp:91] Creating Layer fc_classification_Color_fc_classification_Color_0_split
+I0914 13:40:15.278504 10855 net.cpp:425] fc_classification_Color_fc_classification_Color_0_split <- fc_classification_Color
+I0914 13:40:15.278520 10855 net.cpp:399] fc_classification_Color_fc_classification_Color_0_split -> fc_classification_Color_fc_classification_Color_0_split_0
+I0914 13:40:15.278538 10855 net.cpp:399] fc_classification_Color_fc_classification_Color_0_split -> fc_classification_Color_fc_classification_Color_0_split_1
+I0914 13:40:15.278592 10855 net.cpp:141] Setting up fc_classification_Color_fc_classification_Color_0_split
+I0914 13:40:15.278628 10855 net.cpp:148] Top shape: 40 8 (320)
+I0914 13:40:15.278645 10855 net.cpp:148] Top shape: 40 8 (320)
+I0914 13:40:15.278659 10855 net.cpp:156] Memory required for data: 328254720
+I0914 13:40:15.278674 10855 layer_factory.hpp:77] Creating layer accuracy_at_1_Color
+I0914 13:40:15.278702 10855 net.cpp:91] Creating Layer accuracy_at_1_Color
+I0914 13:40:15.278717 10855 net.cpp:425] accuracy_at_1_Color <- fc_classification_Color_fc_classification_Color_0_split_0
+I0914 13:40:15.278733 10855 net.cpp:425] accuracy_at_1_Color <- label_data_1_split_0
+I0914 13:40:15.278754 10855 net.cpp:399] accuracy_at_1_Color -> accuracy_at_1_Color
+I0914 13:40:15.278784 10855 net.cpp:141] Setting up accuracy_at_1_Color
+I0914 13:40:15.278803 10855 net.cpp:148] Top shape: (1)
+I0914 13:40:15.278817 10855 net.cpp:156] Memory required for data: 328254724
+I0914 13:40:15.278832 10855 layer_factory.hpp:77] Creating layer loss_hashing
+I0914 13:40:15.278851 10855 net.cpp:91] Creating Layer loss_hashing
+I0914 13:40:15.278865 10855 net.cpp:425] loss_hashing <- fc_binary_Color
+I0914 13:40:15.278882 10855 net.cpp:425] loss_hashing <- label_data_1_split_1
+I0914 13:40:15.278903 10855 net.cpp:399] loss_hashing -> loss_hashing
+I0914 13:40:15.279002 10855 net.cpp:141] Setting up loss_hashing
+I0914 13:40:15.279026 10855 net.cpp:148] Top shape: (1)
+I0914 13:40:15.279039 10855 net.cpp:151]     with loss weight 0.1
+I0914 13:40:15.279078 10855 net.cpp:156] Memory required for data: 328254728
+I0914 13:40:15.279093 10855 layer_factory.hpp:77] Creating layer loss_classification
+I0914 13:40:15.279112 10855 net.cpp:91] Creating Layer loss_classification
+I0914 13:40:15.279126 10855 net.cpp:425] loss_classification <- fc_classification_Color_fc_classification_Color_0_split_1
+I0914 13:40:15.279142 10855 net.cpp:425] loss_classification <- label_data_1_split_2
+I0914 13:40:15.279161 10855 net.cpp:399] loss_classification -> loss
+I0914 13:40:15.279184 10855 layer_factory.hpp:77] Creating layer loss_classification
+I0914 13:40:15.279299 10855 net.cpp:141] Setting up loss_classification
+I0914 13:40:15.279322 10855 net.cpp:148] Top shape: (1)
+I0914 13:40:15.279337 10855 net.cpp:151]     with loss weight 1
+I0914 13:40:15.279355 10855 net.cpp:156] Memory required for data: 328254732
+I0914 13:40:15.279369 10855 net.cpp:217] loss_classification needs backward computation.
+I0914 13:40:15.279402 10855 net.cpp:217] loss_hashing needs backward computation.
+I0914 13:40:15.279420 10855 net.cpp:219] accuracy_at_1_Color does not need backward computation.
+I0914 13:40:15.279435 10855 net.cpp:217] fc_classification_Color_fc_classification_Color_0_split needs backward computation.
+I0914 13:40:15.279448 10855 net.cpp:217] fc_classification_Color needs backward computation.
+I0914 13:40:15.279462 10855 net.cpp:217] fc_binary_Color needs backward computation.
+I0914 13:40:15.279476 10855 net.cpp:217] fc7_drop7_0_split needs backward computation.
+I0914 13:40:15.279490 10855 net.cpp:217] drop7 needs backward computation.
+I0914 13:40:15.279503 10855 net.cpp:217] relu7 needs backward computation.
+I0914 13:40:15.279516 10855 net.cpp:217] fc7 needs backward computation.
+I0914 13:40:15.279531 10855 net.cpp:217] drop6 needs backward computation.
+I0914 13:40:15.279543 10855 net.cpp:217] relu6 needs backward computation.
+I0914 13:40:15.279557 10855 net.cpp:217] fc6 needs backward computation.
+I0914 13:40:15.279572 10855 net.cpp:217] pool5 needs backward computation.
+I0914 13:40:15.279589 10855 net.cpp:217] relu5 needs backward computation.
+I0914 13:40:15.279603 10855 net.cpp:217] conv5 needs backward computation.
+I0914 13:40:15.279618 10855 net.cpp:217] relu4 needs backward computation.
+I0914 13:40:15.279631 10855 net.cpp:217] conv4 needs backward computation.
+I0914 13:40:15.279646 10855 net.cpp:217] relu3 needs backward computation.
+I0914 13:40:15.279660 10855 net.cpp:217] conv3 needs backward computation.
+I0914 13:40:15.279690 10855 net.cpp:217] pool2 needs backward computation.
+I0914 13:40:15.279702 10855 net.cpp:217] norm2 needs backward computation.
+I0914 13:40:15.279716 10855 net.cpp:217] relu2 needs backward computation.
+I0914 13:40:15.279729 10855 net.cpp:217] conv2 needs backward computation.
+I0914 13:40:15.279742 10855 net.cpp:217] pool1 needs backward computation.
+I0914 13:40:15.279757 10855 net.cpp:217] norm1 needs backward computation.
+I0914 13:40:15.279769 10855 net.cpp:217] relu1 needs backward computation.
+I0914 13:40:15.279783 10855 net.cpp:217] conv1 needs backward computation.
+I0914 13:40:15.279798 10855 net.cpp:219] label_data_1_split does not need backward computation.
+I0914 13:40:15.279811 10855 net.cpp:219] data does not need backward computation.
+I0914 13:40:15.279824 10855 net.cpp:261] This network produces output accuracy_at_1_Color
+I0914 13:40:15.279839 10855 net.cpp:261] This network produces output loss
+I0914 13:40:15.279852 10855 net.cpp:261] This network produces output loss_hashing
+I0914 13:40:15.279886 10855 net.cpp:274] Network initialization done.
+I0914 13:40:15.280055 10855 solver.cpp:60] Solver scaffolding done.
+I0914 13:40:15.280719 10855 caffe.cpp:209] Resuming from COLOR/color_alexnet_iter_30000.solverstate
+I0914 13:40:19.261394 10855 sgd_solver.cpp:318] SGDSolver: restoring history
+I0914 13:40:19.538905 10855 caffe.cpp:219] Starting Optimization
+I0914 13:40:19.539007 10855 solver.cpp:279] Solving docomo_AlexNet
+I0914 13:40:19.539023 10855 solver.cpp:280] Learning Rate Policy: multistep
+I0914 13:40:19.541440 10855 solver.cpp:337] Iteration 30000, Testing net (#0)
+I0914 13:40:25.663421 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.833
+I0914 13:40:25.663511 10855 solver.cpp:404]     Test net output #1: loss = 0.498153 (* 1 = 0.498153 loss)
+I0914 13:40:25.663538 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.47676 (* 0.1 = 0.147676 loss)
+I0914 13:40:25.762486 10855 solver.cpp:228] Iteration 30000, loss = 0.540317
+I0914 13:40:25.762544 10855 solver.cpp:244]     Train net output #0: loss = 0.375382 (* 1 = 0.375382 loss)
+I0914 13:40:25.762568 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.64935 (* 0.1 = 0.164935 loss)
+I0914 13:40:25.762609 10855 sgd_solver.cpp:106] Iteration 30000, lr = 1e-05
+I0914 13:40:39.499336 10855 solver.cpp:228] Iteration 30100, loss = 0.341658
+I0914 13:40:39.499441 10855 solver.cpp:244]     Train net output #0: loss = 0.424677 (* 1 = 0.424677 loss)
+I0914 13:40:39.499469 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.26174 (* 0.1 = 0.126174 loss)
+I0914 13:40:39.499534 10855 sgd_solver.cpp:106] Iteration 30100, lr = 1e-05
+I0914 13:40:53.215796 10855 solver.cpp:228] Iteration 30200, loss = 0.338176
+I0914 13:40:53.216068 10855 solver.cpp:244]     Train net output #0: loss = 0.185088 (* 1 = 0.185088 loss)
+I0914 13:40:53.216097 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.05479 (* 0.1 = 0.105479 loss)
+I0914 13:40:53.216117 10855 sgd_solver.cpp:106] Iteration 30200, lr = 1e-05
+I0914 13:41:06.967236 10855 solver.cpp:228] Iteration 30300, loss = 0.334964
+I0914 13:41:06.967344 10855 solver.cpp:244]     Train net output #0: loss = 0.258484 (* 1 = 0.258484 loss)
+I0914 13:41:06.967371 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.41006 (* 0.1 = 0.141006 loss)
+I0914 13:41:06.967392 10855 sgd_solver.cpp:106] Iteration 30300, lr = 1e-05
+I0914 13:41:20.780475 10855 solver.cpp:228] Iteration 30400, loss = 0.325908
+I0914 13:41:20.780580 10855 solver.cpp:244]     Train net output #0: loss = 0.114012 (* 1 = 0.114012 loss)
+I0914 13:41:20.780607 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.36565 (* 0.1 = 0.136565 loss)
+I0914 13:41:20.780634 10855 sgd_solver.cpp:106] Iteration 30400, lr = 1e-05
+I0914 13:41:35.274302 10855 solver.cpp:228] Iteration 30500, loss = 0.354642
+I0914 13:41:35.274489 10855 solver.cpp:244]     Train net output #0: loss = 0.224993 (* 1 = 0.224993 loss)
+I0914 13:41:35.274521 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18731 (* 0.1 = 0.118731 loss)
+I0914 13:41:35.274543 10855 sgd_solver.cpp:106] Iteration 30500, lr = 1e-05
+I0914 13:41:50.293859 10855 solver.cpp:228] Iteration 30600, loss = 0.328194
+I0914 13:41:50.293943 10855 solver.cpp:244]     Train net output #0: loss = 0.115902 (* 1 = 0.115902 loss)
+I0914 13:41:50.293969 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.25345 (* 0.1 = 0.125345 loss)
+I0914 13:41:50.293988 10855 sgd_solver.cpp:106] Iteration 30600, lr = 1e-05
+I0914 13:42:05.674254 10855 solver.cpp:228] Iteration 30700, loss = 0.346507
+I0914 13:42:05.674449 10855 solver.cpp:244]     Train net output #0: loss = 0.0777941 (* 1 = 0.0777941 loss)
+I0914 13:42:05.674482 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.11036 (* 0.1 = 0.111036 loss)
+I0914 13:42:05.674504 10855 sgd_solver.cpp:106] Iteration 30700, lr = 1e-05
+I0914 13:42:21.052021 10855 solver.cpp:228] Iteration 30800, loss = 0.368068
+I0914 13:42:21.052114 10855 solver.cpp:244]     Train net output #0: loss = 0.289535 (* 1 = 0.289535 loss)
+I0914 13:42:21.052140 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.33996 (* 0.1 = 0.133996 loss)
+I0914 13:42:21.052162 10855 sgd_solver.cpp:106] Iteration 30800, lr = 1e-05
+I0914 13:42:36.446741 10855 solver.cpp:228] Iteration 30900, loss = 0.334456
+I0914 13:42:36.446938 10855 solver.cpp:244]     Train net output #0: loss = 0.339906 (* 1 = 0.339906 loss)
+I0914 13:42:36.446965 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27119 (* 0.1 = 0.127119 loss)
+I0914 13:42:36.446986 10855 sgd_solver.cpp:106] Iteration 30900, lr = 1e-05
+I0914 13:42:51.829577 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_31000.caffemodel
+I0914 13:42:54.200043 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_31000.solverstate
+I0914 13:42:54.676795 10855 solver.cpp:337] Iteration 31000, Testing net (#0)
+I0914 13:43:01.273823 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.828
+I0914 13:43:01.273922 10855 solver.cpp:404]     Test net output #1: loss = 0.50675 (* 1 = 0.50675 loss)
+I0914 13:43:01.273947 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.51211 (* 0.1 = 0.151211 loss)
+I0914 13:43:01.343487 10855 solver.cpp:228] Iteration 31000, loss = 0.343804
+I0914 13:43:01.343569 10855 solver.cpp:244]     Train net output #0: loss = 0.154414 (* 1 = 0.154414 loss)
+I0914 13:43:01.343606 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.04235 (* 0.1 = 0.104235 loss)
+I0914 13:43:01.343634 10855 sgd_solver.cpp:106] Iteration 31000, lr = 1e-05
+I0914 13:43:16.892210 10855 solver.cpp:228] Iteration 31100, loss = 0.32477
+I0914 13:43:16.892411 10855 solver.cpp:244]     Train net output #0: loss = 0.194201 (* 1 = 0.194201 loss)
+I0914 13:43:16.892441 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34125 (* 0.1 = 0.134125 loss)
+I0914 13:43:16.892480 10855 sgd_solver.cpp:106] Iteration 31100, lr = 1e-05
+I0914 13:43:32.430697 10855 solver.cpp:228] Iteration 31200, loss = 0.329298
+I0914 13:43:32.430794 10855 solver.cpp:244]     Train net output #0: loss = 0.227492 (* 1 = 0.227492 loss)
+I0914 13:43:32.430822 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.55996 (* 0.1 = 0.155996 loss)
+I0914 13:43:32.430841 10855 sgd_solver.cpp:106] Iteration 31200, lr = 1e-05
+I0914 13:43:47.956437 10855 solver.cpp:228] Iteration 31300, loss = 0.344273
+I0914 13:43:47.956626 10855 solver.cpp:244]     Train net output #0: loss = 0.368115 (* 1 = 0.368115 loss)
+I0914 13:43:47.956655 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.21925 (* 0.1 = 0.121925 loss)
+I0914 13:43:47.956676 10855 sgd_solver.cpp:106] Iteration 31300, lr = 1e-05
+I0914 13:44:03.480365 10855 solver.cpp:228] Iteration 31400, loss = 0.322123
+I0914 13:44:03.480478 10855 solver.cpp:244]     Train net output #0: loss = 0.0441644 (* 1 = 0.0441644 loss)
+I0914 13:44:03.480506 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.05682 (* 0.1 = 0.105682 loss)
+I0914 13:44:03.480526 10855 sgd_solver.cpp:106] Iteration 31400, lr = 1e-05
+I0914 13:44:19.003156 10855 solver.cpp:228] Iteration 31500, loss = 0.339695
+I0914 13:44:19.003393 10855 solver.cpp:244]     Train net output #0: loss = 0.110067 (* 1 = 0.110067 loss)
+I0914 13:44:19.003466 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18628 (* 0.1 = 0.118628 loss)
+I0914 13:44:19.003499 10855 sgd_solver.cpp:106] Iteration 31500, lr = 1e-05
+I0914 13:44:34.516433 10855 solver.cpp:228] Iteration 31600, loss = 0.363637
+I0914 13:44:34.516516 10855 solver.cpp:244]     Train net output #0: loss = 0.372368 (* 1 = 0.372368 loss)
+I0914 13:44:34.516542 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.44444 (* 0.1 = 0.144444 loss)
+I0914 13:44:34.516561 10855 sgd_solver.cpp:106] Iteration 31600, lr = 1e-05
+I0914 13:44:50.037292 10855 solver.cpp:228] Iteration 31700, loss = 0.325665
+I0914 13:44:50.037497 10855 solver.cpp:244]     Train net output #0: loss = 0.421734 (* 1 = 0.421734 loss)
+I0914 13:44:50.037528 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.42089 (* 0.1 = 0.142089 loss)
+I0914 13:44:50.037549 10855 sgd_solver.cpp:106] Iteration 31700, lr = 1e-05
+I0914 13:45:05.582200 10855 solver.cpp:228] Iteration 31800, loss = 0.341971
+I0914 13:45:05.582324 10855 solver.cpp:244]     Train net output #0: loss = 0.099172 (* 1 = 0.099172 loss)
+I0914 13:45:05.582358 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.96532 (* 0.1 = 0.096532 loss)
+I0914 13:45:05.582379 10855 sgd_solver.cpp:106] Iteration 31800, lr = 1e-05
+I0914 13:45:21.120739 10855 solver.cpp:228] Iteration 31900, loss = 0.316241
+I0914 13:45:21.120929 10855 solver.cpp:244]     Train net output #0: loss = 0.27383 (* 1 = 0.27383 loss)
+I0914 13:45:21.120957 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.38901 (* 0.1 = 0.138901 loss)
+I0914 13:45:21.120985 10855 sgd_solver.cpp:106] Iteration 31900, lr = 1e-05
+I0914 13:45:36.502621 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_32000.caffemodel
+I0914 13:45:41.625870 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_32000.solverstate
+I0914 13:45:42.089943 10855 solver.cpp:337] Iteration 32000, Testing net (#0)
+I0914 13:45:48.494613 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83
+I0914 13:45:48.494705 10855 solver.cpp:404]     Test net output #1: loss = 0.508968 (* 1 = 0.508968 loss)
+I0914 13:45:48.494729 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.47283 (* 0.1 = 0.147283 loss)
+I0914 13:45:48.563292 10855 solver.cpp:228] Iteration 32000, loss = 0.313707
+I0914 13:45:48.563374 10855 solver.cpp:244]     Train net output #0: loss = 0.126443 (* 1 = 0.126443 loss)
+I0914 13:45:48.563400 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.20995 (* 0.1 = 0.120995 loss)
+I0914 13:45:48.563426 10855 sgd_solver.cpp:106] Iteration 32000, lr = 1e-05
+I0914 13:46:03.920589 10855 solver.cpp:228] Iteration 32100, loss = 0.357181
+I0914 13:46:03.920824 10855 solver.cpp:244]     Train net output #0: loss = 0.28488 (* 1 = 0.28488 loss)
+I0914 13:46:03.920861 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.38059 (* 0.1 = 0.138059 loss)
+I0914 13:46:03.920883 10855 sgd_solver.cpp:106] Iteration 32100, lr = 1e-05
+I0914 13:46:19.454849 10855 solver.cpp:228] Iteration 32200, loss = 0.324536
+I0914 13:46:19.454952 10855 solver.cpp:244]     Train net output #0: loss = 0.0611026 (* 1 = 0.0611026 loss)
+I0914 13:46:19.454979 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.16899 (* 0.1 = 0.116899 loss)
+I0914 13:46:19.455003 10855 sgd_solver.cpp:106] Iteration 32200, lr = 1e-05
+I0914 13:46:35.049957 10855 solver.cpp:228] Iteration 32300, loss = 0.324042
+I0914 13:46:35.050338 10855 solver.cpp:244]     Train net output #0: loss = 0.249769 (* 1 = 0.249769 loss)
+I0914 13:46:35.050407 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28858 (* 0.1 = 0.128858 loss)
+I0914 13:46:35.050439 10855 sgd_solver.cpp:106] Iteration 32300, lr = 1e-05
+I0914 13:46:50.650307 10855 solver.cpp:228] Iteration 32400, loss = 0.355114
+I0914 13:46:50.650416 10855 solver.cpp:244]     Train net output #0: loss = 0.264988 (* 1 = 0.264988 loss)
+I0914 13:46:50.650444 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.35624 (* 0.1 = 0.135624 loss)
+I0914 13:46:50.650466 10855 sgd_solver.cpp:106] Iteration 32400, lr = 1e-05
+I0914 13:47:06.183720 10855 solver.cpp:228] Iteration 32500, loss = 0.329996
+I0914 13:47:06.183910 10855 solver.cpp:244]     Train net output #0: loss = 0.283691 (* 1 = 0.283691 loss)
+I0914 13:47:06.183940 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.16621 (* 0.1 = 0.116621 loss)
+I0914 13:47:06.183964 10855 sgd_solver.cpp:106] Iteration 32500, lr = 1e-05
+I0914 13:47:21.710914 10855 solver.cpp:228] Iteration 32600, loss = 0.34422
+I0914 13:47:21.710999 10855 solver.cpp:244]     Train net output #0: loss = 0.0784527 (* 1 = 0.0784527 loss)
+I0914 13:47:21.711025 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.16165 (* 0.1 = 0.116165 loss)
+I0914 13:47:21.711047 10855 sgd_solver.cpp:106] Iteration 32600, lr = 1e-05
+I0914 13:47:37.248248 10855 solver.cpp:228] Iteration 32700, loss = 0.328337
+I0914 13:47:37.248451 10855 solver.cpp:244]     Train net output #0: loss = 0.264908 (* 1 = 0.264908 loss)
+I0914 13:47:37.248481 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32894 (* 0.1 = 0.132894 loss)
+I0914 13:47:37.248507 10855 sgd_solver.cpp:106] Iteration 32700, lr = 1e-05
+I0914 13:47:52.785557 10855 solver.cpp:228] Iteration 32800, loss = 0.328558
+I0914 13:47:52.785655 10855 solver.cpp:244]     Train net output #0: loss = 0.137754 (* 1 = 0.137754 loss)
+I0914 13:47:52.785682 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.4073 (* 0.1 = 0.14073 loss)
+I0914 13:47:52.785704 10855 sgd_solver.cpp:106] Iteration 32800, lr = 1e-05
+I0914 13:48:08.311911 10855 solver.cpp:228] Iteration 32900, loss = 0.34624
+I0914 13:48:08.312139 10855 solver.cpp:244]     Train net output #0: loss = 0.236743 (* 1 = 0.236743 loss)
+I0914 13:48:08.312170 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.35656 (* 0.1 = 0.135656 loss)
+I0914 13:48:08.312196 10855 sgd_solver.cpp:106] Iteration 32900, lr = 1e-05
+I0914 13:48:23.690831 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_33000.caffemodel
+I0914 13:48:27.675186 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_33000.solverstate
+I0914 13:48:28.150097 10855 solver.cpp:337] Iteration 33000, Testing net (#0)
+I0914 13:48:34.649404 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83575
+I0914 13:48:34.649500 10855 solver.cpp:404]     Test net output #1: loss = 0.496995 (* 1 = 0.496995 loss)
+I0914 13:48:34.649523 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.45451 (* 0.1 = 0.145451 loss)
+I0914 13:48:34.718755 10855 solver.cpp:228] Iteration 33000, loss = 0.329944
+I0914 13:48:34.718835 10855 solver.cpp:244]     Train net output #0: loss = 0.0842032 (* 1 = 0.0842032 loss)
+I0914 13:48:34.718859 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.12131 (* 0.1 = 0.112131 loss)
+I0914 13:48:34.718884 10855 sgd_solver.cpp:106] Iteration 33000, lr = 1e-05
+I0914 13:48:50.247012 10855 solver.cpp:228] Iteration 33100, loss = 0.325739
+I0914 13:48:50.247282 10855 solver.cpp:244]     Train net output #0: loss = 0.164889 (* 1 = 0.164889 loss)
+I0914 13:48:50.247311 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.11119 (* 0.1 = 0.111119 loss)
+I0914 13:48:50.247334 10855 sgd_solver.cpp:106] Iteration 33100, lr = 1e-05
+I0914 13:49:05.772788 10855 solver.cpp:228] Iteration 33200, loss = 0.368258
+I0914 13:49:05.772891 10855 solver.cpp:244]     Train net output #0: loss = 0.267972 (* 1 = 0.267972 loss)
+I0914 13:49:05.772914 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.49733 (* 0.1 = 0.149733 loss)
+I0914 13:49:05.772933 10855 sgd_solver.cpp:106] Iteration 33200, lr = 1e-05
+I0914 13:49:21.308846 10855 solver.cpp:228] Iteration 33300, loss = 0.319405
+I0914 13:49:21.309082 10855 solver.cpp:244]     Train net output #0: loss = 0.254012 (* 1 = 0.254012 loss)
+I0914 13:49:21.309108 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.24319 (* 0.1 = 0.124319 loss)
+I0914 13:49:21.309130 10855 sgd_solver.cpp:106] Iteration 33300, lr = 1e-05
+I0914 13:49:36.846148 10855 solver.cpp:228] Iteration 33400, loss = 0.349669
+I0914 13:49:36.846246 10855 solver.cpp:244]     Train net output #0: loss = 0.0912662 (* 1 = 0.0912662 loss)
+I0914 13:49:36.846269 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.974434 (* 0.1 = 0.0974434 loss)
+I0914 13:49:36.846292 10855 sgd_solver.cpp:106] Iteration 33400, lr = 1e-05
+I0914 13:49:52.372011 10855 solver.cpp:228] Iteration 33500, loss = 0.310354
+I0914 13:49:52.372170 10855 solver.cpp:244]     Train net output #0: loss = 0.247542 (* 1 = 0.247542 loss)
+I0914 13:49:52.372197 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.44537 (* 0.1 = 0.144537 loss)
+I0914 13:49:52.372215 10855 sgd_solver.cpp:106] Iteration 33500, lr = 1e-05
+I0914 13:50:07.902132 10855 solver.cpp:228] Iteration 33600, loss = 0.30447
+I0914 13:50:07.902215 10855 solver.cpp:244]     Train net output #0: loss = 0.0947082 (* 1 = 0.0947082 loss)
+I0914 13:50:07.902240 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32178 (* 0.1 = 0.132178 loss)
+I0914 13:50:07.902262 10855 sgd_solver.cpp:106] Iteration 33600, lr = 1e-05
+I0914 13:50:23.439916 10855 solver.cpp:228] Iteration 33700, loss = 0.345026
+I0914 13:50:23.440135 10855 solver.cpp:244]     Train net output #0: loss = 0.17561 (* 1 = 0.17561 loss)
+I0914 13:50:23.440162 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.48054 (* 0.1 = 0.148054 loss)
+I0914 13:50:23.440186 10855 sgd_solver.cpp:106] Iteration 33700, lr = 1e-05
+I0914 13:50:38.974515 10855 solver.cpp:228] Iteration 33800, loss = 0.311817
+I0914 13:50:38.974608 10855 solver.cpp:244]     Train net output #0: loss = 0.121093 (* 1 = 0.121093 loss)
+I0914 13:50:38.974632 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.08226 (* 0.1 = 0.108226 loss)
+I0914 13:50:38.974660 10855 sgd_solver.cpp:106] Iteration 33800, lr = 1e-05
+I0914 13:50:54.504838 10855 solver.cpp:228] Iteration 33900, loss = 0.336022
+I0914 13:50:54.505030 10855 solver.cpp:244]     Train net output #0: loss = 0.148989 (* 1 = 0.148989 loss)
+I0914 13:50:54.505058 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.31978 (* 0.1 = 0.131978 loss)
+I0914 13:50:54.505079 10855 sgd_solver.cpp:106] Iteration 33900, lr = 1e-05
+I0914 13:51:09.889942 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_34000.caffemodel
+I0914 13:51:13.557095 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_34000.solverstate
+I0914 13:51:14.025308 10855 solver.cpp:337] Iteration 34000, Testing net (#0)
+I0914 13:51:20.529213 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.827
+I0914 13:51:20.529316 10855 solver.cpp:404]     Test net output #1: loss = 0.515406 (* 1 = 0.515406 loss)
+I0914 13:51:20.529341 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.50628 (* 0.1 = 0.150628 loss)
+I0914 13:51:20.597924 10855 solver.cpp:228] Iteration 34000, loss = 0.360762
+I0914 13:51:20.597981 10855 solver.cpp:244]     Train net output #0: loss = 0.236102 (* 1 = 0.236102 loss)
+I0914 13:51:20.598006 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34786 (* 0.1 = 0.134786 loss)
+I0914 13:51:20.598029 10855 sgd_solver.cpp:106] Iteration 34000, lr = 1e-05
+I0914 13:51:36.066416 10855 solver.cpp:228] Iteration 34100, loss = 0.323458
+I0914 13:51:36.066766 10855 solver.cpp:244]     Train net output #0: loss = 0.284966 (* 1 = 0.284966 loss)
+I0914 13:51:36.066807 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.12263 (* 0.1 = 0.112263 loss)
+I0914 13:51:36.066831 10855 sgd_solver.cpp:106] Iteration 34100, lr = 1e-05
+I0914 13:51:51.582890 10855 solver.cpp:228] Iteration 34200, loss = 0.343099
+I0914 13:51:51.582995 10855 solver.cpp:244]     Train net output #0: loss = 0.151752 (* 1 = 0.151752 loss)
+I0914 13:51:51.583020 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.08876 (* 0.1 = 0.108876 loss)
+I0914 13:51:51.583042 10855 sgd_solver.cpp:106] Iteration 34200, lr = 1e-05
+I0914 13:52:07.112632 10855 solver.cpp:228] Iteration 34300, loss = 0.317593
+I0914 13:52:07.112834 10855 solver.cpp:244]     Train net output #0: loss = 0.301464 (* 1 = 0.301464 loss)
+I0914 13:52:07.112861 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27799 (* 0.1 = 0.127799 loss)
+I0914 13:52:07.112882 10855 sgd_solver.cpp:106] Iteration 34300, lr = 1e-05
+I0914 13:52:22.715673 10855 solver.cpp:228] Iteration 34400, loss = 0.324603
+I0914 13:52:22.715806 10855 solver.cpp:244]     Train net output #0: loss = 0.121474 (* 1 = 0.121474 loss)
+I0914 13:52:22.715832 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.221 (* 0.1 = 0.1221 loss)
+I0914 13:52:22.715853 10855 sgd_solver.cpp:106] Iteration 34400, lr = 1e-05
+I0914 13:52:38.248687 10855 solver.cpp:228] Iteration 34500, loss = 0.328766
+I0914 13:52:38.248879 10855 solver.cpp:244]     Train net output #0: loss = 0.209825 (* 1 = 0.209825 loss)
+I0914 13:52:38.248906 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23629 (* 0.1 = 0.123629 loss)
+I0914 13:52:38.248927 10855 sgd_solver.cpp:106] Iteration 34500, lr = 1e-05
+I0914 13:52:53.778667 10855 solver.cpp:228] Iteration 34600, loss = 0.326119
+I0914 13:52:53.778792 10855 solver.cpp:244]     Train net output #0: loss = 0.0886026 (* 1 = 0.0886026 loss)
+I0914 13:52:53.778820 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23821 (* 0.1 = 0.123821 loss)
+I0914 13:52:53.778841 10855 sgd_solver.cpp:106] Iteration 34600, lr = 1e-05
+I0914 13:53:09.311213 10855 solver.cpp:228] Iteration 34700, loss = 0.332943
+I0914 13:53:09.311393 10855 solver.cpp:244]     Train net output #0: loss = 0.117195 (* 1 = 0.117195 loss)
+I0914 13:53:09.311419 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.21994 (* 0.1 = 0.121994 loss)
+I0914 13:53:09.311440 10855 sgd_solver.cpp:106] Iteration 34700, lr = 1e-05
+I0914 13:53:24.846632 10855 solver.cpp:228] Iteration 34800, loss = 0.352161
+I0914 13:53:24.846732 10855 solver.cpp:244]     Train net output #0: loss = 0.267868 (* 1 = 0.267868 loss)
+I0914 13:53:24.846757 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.30043 (* 0.1 = 0.130043 loss)
+I0914 13:53:24.846778 10855 sgd_solver.cpp:106] Iteration 34800, lr = 1e-05
+I0914 13:53:40.375216 10855 solver.cpp:228] Iteration 34900, loss = 0.309806
+I0914 13:53:40.375496 10855 solver.cpp:244]     Train net output #0: loss = 0.30587 (* 1 = 0.30587 loss)
+I0914 13:53:40.375524 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.05547 (* 0.1 = 0.105547 loss)
+I0914 13:53:40.375550 10855 sgd_solver.cpp:106] Iteration 34900, lr = 1e-05
+I0914 13:53:55.750787 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_35000.caffemodel
+I0914 13:53:58.131762 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_35000.solverstate
+I0914 13:53:58.612946 10855 solver.cpp:337] Iteration 35000, Testing net (#0)
+I0914 13:54:05.211462 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.833
+I0914 13:54:05.211530 10855 solver.cpp:404]     Test net output #1: loss = 0.504524 (* 1 = 0.504524 loss)
+I0914 13:54:05.211555 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.49154 (* 0.1 = 0.149154 loss)
+I0914 13:54:05.280722 10855 solver.cpp:228] Iteration 35000, loss = 0.349302
+I0914 13:54:05.280797 10855 solver.cpp:244]     Train net output #0: loss = 0.123483 (* 1 = 0.123483 loss)
+I0914 13:54:05.280824 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.89685 (* 0.1 = 0.089685 loss)
+I0914 13:54:05.280848 10855 sgd_solver.cpp:46] MultiStep Status: Iteration 35000, step = 2
+I0914 13:54:05.280875 10855 sgd_solver.cpp:106] Iteration 35000, lr = 1e-06
+I0914 13:54:20.811363 10855 solver.cpp:228] Iteration 35100, loss = 0.3106
+I0914 13:54:20.811655 10855 solver.cpp:244]     Train net output #0: loss = 0.215939 (* 1 = 0.215939 loss)
+I0914 13:54:20.811695 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.31188 (* 0.1 = 0.131188 loss)
+I0914 13:54:20.811719 10855 sgd_solver.cpp:106] Iteration 35100, lr = 1e-06
+I0914 13:54:36.336835 10855 solver.cpp:228] Iteration 35200, loss = 0.316193
+I0914 13:54:36.336940 10855 solver.cpp:244]     Train net output #0: loss = 0.116142 (* 1 = 0.116142 loss)
+I0914 13:54:36.336964 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.50133 (* 0.1 = 0.150133 loss)
+I0914 13:54:36.336987 10855 sgd_solver.cpp:106] Iteration 35200, lr = 1e-06
+I0914 13:54:51.863121 10855 solver.cpp:228] Iteration 35300, loss = 0.341122
+I0914 13:54:51.863322 10855 solver.cpp:244]     Train net output #0: loss = 0.249357 (* 1 = 0.249357 loss)
+I0914 13:54:51.863348 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.1274 (* 0.1 = 0.11274 loss)
+I0914 13:54:51.863370 10855 sgd_solver.cpp:106] Iteration 35300, lr = 1e-06
+I0914 13:55:07.409065 10855 solver.cpp:228] Iteration 35400, loss = 0.31558
+I0914 13:55:07.409175 10855 solver.cpp:244]     Train net output #0: loss = 0.0324297 (* 1 = 0.0324297 loss)
+I0914 13:55:07.409211 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.955797 (* 0.1 = 0.0955797 loss)
+I0914 13:55:07.409248 10855 sgd_solver.cpp:106] Iteration 35400, lr = 1e-06
+I0914 13:55:22.938007 10855 solver.cpp:228] Iteration 35500, loss = 0.322405
+I0914 13:55:22.938215 10855 solver.cpp:244]     Train net output #0: loss = 0.14378 (* 1 = 0.14378 loss)
+I0914 13:55:22.938241 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22746 (* 0.1 = 0.122746 loss)
+I0914 13:55:22.938271 10855 sgd_solver.cpp:106] Iteration 35500, lr = 1e-06
+I0914 13:55:38.463467 10855 solver.cpp:228] Iteration 35600, loss = 0.347474
+I0914 13:55:38.463562 10855 solver.cpp:244]     Train net output #0: loss = 0.320468 (* 1 = 0.320468 loss)
+I0914 13:55:38.463587 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.39456 (* 0.1 = 0.139456 loss)
+I0914 13:55:38.463608 10855 sgd_solver.cpp:106] Iteration 35600, lr = 1e-06
+I0914 13:55:53.989958 10855 solver.cpp:228] Iteration 35700, loss = 0.313913
+I0914 13:55:53.990190 10855 solver.cpp:244]     Train net output #0: loss = 0.429968 (* 1 = 0.429968 loss)
+I0914 13:55:53.990216 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23729 (* 0.1 = 0.123729 loss)
+I0914 13:55:53.990238 10855 sgd_solver.cpp:106] Iteration 35700, lr = 1e-06
+I0914 13:56:09.514284 10855 solver.cpp:228] Iteration 35800, loss = 0.322492
+I0914 13:56:09.514379 10855 solver.cpp:244]     Train net output #0: loss = 0.217573 (* 1 = 0.217573 loss)
+I0914 13:56:09.514405 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.15082 (* 0.1 = 0.115082 loss)
+I0914 13:56:09.514426 10855 sgd_solver.cpp:106] Iteration 35800, lr = 1e-06
+I0914 13:56:25.036765 10855 solver.cpp:228] Iteration 35900, loss = 0.32328
+I0914 13:56:25.037025 10855 solver.cpp:244]     Train net output #0: loss = 0.20496 (* 1 = 0.20496 loss)
+I0914 13:56:25.037053 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.56339 (* 0.1 = 0.156339 loss)
+I0914 13:56:25.037075 10855 sgd_solver.cpp:106] Iteration 35900, lr = 1e-06
+I0914 13:56:40.408818 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_36000.caffemodel
+I0914 13:56:45.689379 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_36000.solverstate
+I0914 13:56:46.158423 10855 solver.cpp:337] Iteration 36000, Testing net (#0)
+I0914 13:56:52.507874 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83775
+I0914 13:56:52.507971 10855 solver.cpp:404]     Test net output #1: loss = 0.496136 (* 1 = 0.496136 loss)
+I0914 13:56:52.507995 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.47233 (* 0.1 = 0.147233 loss)
+I0914 13:56:52.575783 10855 solver.cpp:228] Iteration 36000, loss = 0.317056
+I0914 13:56:52.575853 10855 solver.cpp:244]     Train net output #0: loss = 0.13591 (* 1 = 0.13591 loss)
+I0914 13:56:52.575878 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.33215 (* 0.1 = 0.133215 loss)
+I0914 13:56:52.575902 10855 sgd_solver.cpp:106] Iteration 36000, lr = 1e-06
+I0914 13:57:07.956396 10855 solver.cpp:228] Iteration 36100, loss = 0.351087
+I0914 13:57:07.956646 10855 solver.cpp:244]     Train net output #0: loss = 0.460256 (* 1 = 0.460256 loss)
+I0914 13:57:07.956674 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.43836 (* 0.1 = 0.143836 loss)
+I0914 13:57:07.956696 10855 sgd_solver.cpp:106] Iteration 36100, lr = 1e-06
+I0914 13:57:23.477283 10855 solver.cpp:228] Iteration 36200, loss = 0.311369
+I0914 13:57:23.477370 10855 solver.cpp:244]     Train net output #0: loss = 0.110776 (* 1 = 0.110776 loss)
+I0914 13:57:23.477396 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.2719 (* 0.1 = 0.12719 loss)
+I0914 13:57:23.477413 10855 sgd_solver.cpp:106] Iteration 36200, lr = 1e-06
+I0914 13:57:39.003690 10855 solver.cpp:228] Iteration 36300, loss = 0.340621
+I0914 13:57:39.003885 10855 solver.cpp:244]     Train net output #0: loss = 0.111212 (* 1 = 0.111212 loss)
+I0914 13:57:39.003911 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.33349 (* 0.1 = 0.133349 loss)
+I0914 13:57:39.003933 10855 sgd_solver.cpp:106] Iteration 36300, lr = 1e-06
+I0914 13:57:54.531410 10855 solver.cpp:228] Iteration 36400, loss = 0.346031
+I0914 13:57:54.531496 10855 solver.cpp:244]     Train net output #0: loss = 0.234296 (* 1 = 0.234296 loss)
+I0914 13:57:54.531519 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19962 (* 0.1 = 0.119962 loss)
+I0914 13:57:54.531548 10855 sgd_solver.cpp:106] Iteration 36400, lr = 1e-06
+I0914 13:58:10.058543 10855 solver.cpp:228] Iteration 36500, loss = 0.308872
+I0914 13:58:10.058786 10855 solver.cpp:244]     Train net output #0: loss = 0.321711 (* 1 = 0.321711 loss)
+I0914 13:58:10.058816 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.13654 (* 0.1 = 0.113654 loss)
+I0914 13:58:10.058830 10855 sgd_solver.cpp:106] Iteration 36500, lr = 1e-06
+I0914 13:58:25.582288 10855 solver.cpp:228] Iteration 36600, loss = 0.335915
+I0914 13:58:25.582357 10855 solver.cpp:244]     Train net output #0: loss = 0.148692 (* 1 = 0.148692 loss)
+I0914 13:58:25.582381 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.989322 (* 0.1 = 0.0989322 loss)
+I0914 13:58:25.582402 10855 sgd_solver.cpp:106] Iteration 36600, lr = 1e-06
+I0914 13:58:41.105054 10855 solver.cpp:228] Iteration 36700, loss = 0.319479
+I0914 13:58:41.105285 10855 solver.cpp:244]     Train net output #0: loss = 0.20451 (* 1 = 0.20451 loss)
+I0914 13:58:41.105314 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22312 (* 0.1 = 0.122312 loss)
+I0914 13:58:41.105336 10855 sgd_solver.cpp:106] Iteration 36700, lr = 1e-06
+I0914 13:58:56.635154 10855 solver.cpp:228] Iteration 36800, loss = 0.319075
+I0914 13:58:56.635262 10855 solver.cpp:244]     Train net output #0: loss = 0.0856991 (* 1 = 0.0856991 loss)
+I0914 13:58:56.635287 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18678 (* 0.1 = 0.118678 loss)
+I0914 13:58:56.635308 10855 sgd_solver.cpp:106] Iteration 36800, lr = 1e-06
+I0914 13:59:12.163214 10855 solver.cpp:228] Iteration 36900, loss = 0.336409
+I0914 13:59:12.163470 10855 solver.cpp:244]     Train net output #0: loss = 0.166464 (* 1 = 0.166464 loss)
+I0914 13:59:12.163501 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.25495 (* 0.1 = 0.125495 loss)
+I0914 13:59:12.163527 10855 sgd_solver.cpp:106] Iteration 36900, lr = 1e-06
+I0914 13:59:27.543915 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_37000.caffemodel
+I0914 13:59:31.228617 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_37000.solverstate
+I0914 13:59:31.723310 10855 solver.cpp:337] Iteration 37000, Testing net (#0)
+I0914 13:59:38.251821 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83125
+I0914 13:59:38.251921 10855 solver.cpp:404]     Test net output #1: loss = 0.50806 (* 1 = 0.50806 loss)
+I0914 13:59:38.251945 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.495 (* 0.1 = 0.1495 loss)
+I0914 13:59:38.320379 10855 solver.cpp:228] Iteration 37000, loss = 0.315502
+I0914 13:59:38.320461 10855 solver.cpp:244]     Train net output #0: loss = 0.0777135 (* 1 = 0.0777135 loss)
+I0914 13:59:38.320487 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.10278 (* 0.1 = 0.110278 loss)
+I0914 13:59:38.320513 10855 sgd_solver.cpp:106] Iteration 37000, lr = 1e-06
+I0914 13:59:53.842442 10855 solver.cpp:228] Iteration 37100, loss = 0.338059
+I0914 13:59:53.842651 10855 solver.cpp:244]     Train net output #0: loss = 0.230248 (* 1 = 0.230248 loss)
+I0914 13:59:53.842677 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.37495 (* 0.1 = 0.137495 loss)
+I0914 13:59:53.842700 10855 sgd_solver.cpp:106] Iteration 37100, lr = 1e-06
+I0914 14:00:09.370474 10855 solver.cpp:228] Iteration 37200, loss = 0.346288
+I0914 14:00:09.370580 10855 solver.cpp:244]     Train net output #0: loss = 0.240922 (* 1 = 0.240922 loss)
+I0914 14:00:09.370605 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34255 (* 0.1 = 0.134255 loss)
+I0914 14:00:09.370627 10855 sgd_solver.cpp:106] Iteration 37200, lr = 1e-06
+I0914 14:00:24.901350 10855 solver.cpp:228] Iteration 37300, loss = 0.312721
+I0914 14:00:24.901556 10855 solver.cpp:244]     Train net output #0: loss = 0.477368 (* 1 = 0.477368 loss)
+I0914 14:00:24.901583 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19039 (* 0.1 = 0.119039 loss)
+I0914 14:00:24.901607 10855 sgd_solver.cpp:106] Iteration 37300, lr = 1e-06
+I0914 14:00:40.432281 10855 solver.cpp:228] Iteration 37400, loss = 0.316701
+I0914 14:00:40.432386 10855 solver.cpp:244]     Train net output #0: loss = 0.16473 (* 1 = 0.16473 loss)
+I0914 14:00:40.432412 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.04052 (* 0.1 = 0.104052 loss)
+I0914 14:00:40.432435 10855 sgd_solver.cpp:106] Iteration 37400, lr = 1e-06
+I0914 14:00:55.963407 10855 solver.cpp:228] Iteration 37500, loss = 0.319144
+I0914 14:00:55.963604 10855 solver.cpp:244]     Train net output #0: loss = 0.180429 (* 1 = 0.180429 loss)
+I0914 14:00:55.963631 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18592 (* 0.1 = 0.118592 loss)
+I0914 14:00:55.963654 10855 sgd_solver.cpp:106] Iteration 37500, lr = 1e-06
+I0914 14:01:11.494967 10855 solver.cpp:228] Iteration 37600, loss = 0.308925
+I0914 14:01:11.495059 10855 solver.cpp:244]     Train net output #0: loss = 0.0803006 (* 1 = 0.0803006 loss)
+I0914 14:01:11.495084 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.36468 (* 0.1 = 0.136468 loss)
+I0914 14:01:11.495105 10855 sgd_solver.cpp:106] Iteration 37600, lr = 1e-06
+I0914 14:01:27.026684 10855 solver.cpp:228] Iteration 37700, loss = 0.342823
+I0914 14:01:27.026955 10855 solver.cpp:244]     Train net output #0: loss = 0.18198 (* 1 = 0.18198 loss)
+I0914 14:01:27.026983 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.2984 (* 0.1 = 0.12984 loss)
+I0914 14:01:27.027006 10855 sgd_solver.cpp:106] Iteration 37700, lr = 1e-06
+I0914 14:01:42.560524 10855 solver.cpp:228] Iteration 37800, loss = 0.307774
+I0914 14:01:42.560611 10855 solver.cpp:244]     Train net output #0: loss = 0.101528 (* 1 = 0.101528 loss)
+I0914 14:01:42.560636 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.11749 (* 0.1 = 0.111749 loss)
+I0914 14:01:42.560657 10855 sgd_solver.cpp:106] Iteration 37800, lr = 1e-06
+I0914 14:01:58.085343 10855 solver.cpp:228] Iteration 37900, loss = 0.325096
+I0914 14:01:58.085525 10855 solver.cpp:244]     Train net output #0: loss = 0.12942 (* 1 = 0.12942 loss)
+I0914 14:01:58.085551 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.10713 (* 0.1 = 0.110713 loss)
+I0914 14:01:58.085608 10855 sgd_solver.cpp:106] Iteration 37900, lr = 1e-06
+I0914 14:02:13.454264 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_38000.caffemodel
+I0914 14:02:18.452669 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_38000.solverstate
+I0914 14:02:18.934267 10855 solver.cpp:337] Iteration 38000, Testing net (#0)
+I0914 14:02:25.376309 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83175
+I0914 14:02:25.376406 10855 solver.cpp:404]     Test net output #1: loss = 0.506166 (* 1 = 0.506166 loss)
+I0914 14:02:25.376431 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.46831 (* 0.1 = 0.146831 loss)
+I0914 14:02:25.444862 10855 solver.cpp:228] Iteration 38000, loss = 0.348141
+I0914 14:02:25.444938 10855 solver.cpp:244]     Train net output #0: loss = 0.208356 (* 1 = 0.208356 loss)
+I0914 14:02:25.444962 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.47272 (* 0.1 = 0.147272 loss)
+I0914 14:02:25.444988 10855 sgd_solver.cpp:106] Iteration 38000, lr = 1e-06
+I0914 14:02:40.868165 10855 solver.cpp:228] Iteration 38100, loss = 0.316125
+I0914 14:02:40.868358 10855 solver.cpp:244]     Train net output #0: loss = 0.403614 (* 1 = 0.403614 loss)
+I0914 14:02:40.868384 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.20268 (* 0.1 = 0.120268 loss)
+I0914 14:02:40.868407 10855 sgd_solver.cpp:106] Iteration 38100, lr = 1e-06
+I0914 14:02:56.395823 10855 solver.cpp:228] Iteration 38200, loss = 0.330484
+I0914 14:02:56.395920 10855 solver.cpp:244]     Train net output #0: loss = 0.146462 (* 1 = 0.146462 loss)
+I0914 14:02:56.395946 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.11694 (* 0.1 = 0.111694 loss)
+I0914 14:02:56.395968 10855 sgd_solver.cpp:106] Iteration 38200, lr = 1e-06
+I0914 14:03:11.922029 10855 solver.cpp:228] Iteration 38300, loss = 0.318791
+I0914 14:03:11.922255 10855 solver.cpp:244]     Train net output #0: loss = 0.349273 (* 1 = 0.349273 loss)
+I0914 14:03:11.922284 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.37332 (* 0.1 = 0.137332 loss)
+I0914 14:03:11.922300 10855 sgd_solver.cpp:106] Iteration 38300, lr = 1e-06
+I0914 14:03:27.454442 10855 solver.cpp:228] Iteration 38400, loss = 0.318413
+I0914 14:03:27.454543 10855 solver.cpp:244]     Train net output #0: loss = 0.0976359 (* 1 = 0.0976359 loss)
+I0914 14:03:27.454568 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22562 (* 0.1 = 0.122562 loss)
+I0914 14:03:27.454591 10855 sgd_solver.cpp:106] Iteration 38400, lr = 1e-06
+I0914 14:03:42.981261 10855 solver.cpp:228] Iteration 38500, loss = 0.338399
+I0914 14:03:42.981531 10855 solver.cpp:244]     Train net output #0: loss = 0.233918 (* 1 = 0.233918 loss)
+I0914 14:03:42.981559 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34504 (* 0.1 = 0.134504 loss)
+I0914 14:03:42.981581 10855 sgd_solver.cpp:106] Iteration 38500, lr = 1e-06
+I0914 14:03:58.510396 10855 solver.cpp:228] Iteration 38600, loss = 0.32059
+I0914 14:03:58.510493 10855 solver.cpp:244]     Train net output #0: loss = 0.132549 (* 1 = 0.132549 loss)
+I0914 14:03:58.510517 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18519 (* 0.1 = 0.118519 loss)
+I0914 14:03:58.510540 10855 sgd_solver.cpp:106] Iteration 38600, lr = 1e-06
+I0914 14:04:14.037009 10855 solver.cpp:228] Iteration 38700, loss = 0.322861
+I0914 14:04:14.037195 10855 solver.cpp:244]     Train net output #0: loss = 0.252542 (* 1 = 0.252542 loss)
+I0914 14:04:14.037222 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.29766 (* 0.1 = 0.129766 loss)
+I0914 14:04:14.037241 10855 sgd_solver.cpp:106] Iteration 38700, lr = 1e-06
+I0914 14:04:29.561242 10855 solver.cpp:228] Iteration 38800, loss = 0.345415
+I0914 14:04:29.561342 10855 solver.cpp:244]     Train net output #0: loss = 0.270134 (* 1 = 0.270134 loss)
+I0914 14:04:29.561367 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.44772 (* 0.1 = 0.144772 loss)
+I0914 14:04:29.561388 10855 sgd_solver.cpp:106] Iteration 38800, lr = 1e-06
+I0914 14:04:45.089231 10855 solver.cpp:228] Iteration 38900, loss = 0.315777
+I0914 14:04:45.089385 10855 solver.cpp:244]     Train net output #0: loss = 0.238924 (* 1 = 0.238924 loss)
+I0914 14:04:45.089411 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.05832 (* 0.1 = 0.105832 loss)
+I0914 14:04:45.089432 10855 sgd_solver.cpp:106] Iteration 38900, lr = 1e-06
+I0914 14:05:00.462958 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_39000.caffemodel
+I0914 14:05:04.427964 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_39000.solverstate
+I0914 14:05:04.971549 10855 solver.cpp:337] Iteration 39000, Testing net (#0)
+I0914 14:05:11.501711 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.839
+I0914 14:05:11.501796 10855 solver.cpp:404]     Test net output #1: loss = 0.496213 (* 1 = 0.496213 loss)
+I0914 14:05:11.501821 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.46969 (* 0.1 = 0.146969 loss)
+I0914 14:05:11.570899 10855 solver.cpp:228] Iteration 39000, loss = 0.317275
+I0914 14:05:11.570981 10855 solver.cpp:244]     Train net output #0: loss = 0.127032 (* 1 = 0.127032 loss)
+I0914 14:05:11.571007 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.971395 (* 0.1 = 0.0971395 loss)
+I0914 14:05:11.571036 10855 sgd_solver.cpp:106] Iteration 39000, lr = 1e-06
+I0914 14:05:27.104218 10855 solver.cpp:228] Iteration 39100, loss = 0.320138
+I0914 14:05:27.104413 10855 solver.cpp:244]     Train net output #0: loss = 0.247665 (* 1 = 0.247665 loss)
+I0914 14:05:27.104440 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.40472 (* 0.1 = 0.140472 loss)
+I0914 14:05:27.104462 10855 sgd_solver.cpp:106] Iteration 39100, lr = 1e-06
+I0914 14:05:42.639745 10855 solver.cpp:228] Iteration 39200, loss = 0.31013
+I0914 14:05:42.639844 10855 solver.cpp:244]     Train net output #0: loss = 0.164352 (* 1 = 0.164352 loss)
+I0914 14:05:42.639869 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28989 (* 0.1 = 0.128989 loss)
+I0914 14:05:42.639891 10855 sgd_solver.cpp:106] Iteration 39200, lr = 1e-06
+I0914 14:05:58.172761 10855 solver.cpp:228] Iteration 39300, loss = 0.343079
+I0914 14:05:58.172935 10855 solver.cpp:244]     Train net output #0: loss = 0.199042 (* 1 = 0.199042 loss)
+I0914 14:05:58.172960 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.07391 (* 0.1 = 0.107391 loss)
+I0914 14:05:58.172982 10855 sgd_solver.cpp:106] Iteration 39300, lr = 1e-06
+I0914 14:06:13.705518 10855 solver.cpp:228] Iteration 39400, loss = 0.305907
+I0914 14:06:13.705613 10855 solver.cpp:244]     Train net output #0: loss = 0.0825516 (* 1 = 0.0825516 loss)
+I0914 14:06:13.705642 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28256 (* 0.1 = 0.128256 loss)
+I0914 14:06:13.705667 10855 sgd_solver.cpp:106] Iteration 39400, lr = 1e-06
+I0914 14:06:29.238662 10855 solver.cpp:228] Iteration 39500, loss = 0.313067
+I0914 14:06:29.238924 10855 solver.cpp:244]     Train net output #0: loss = 0.09991 (* 1 = 0.09991 loss)
+I0914 14:06:29.238952 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.21971 (* 0.1 = 0.121971 loss)
+I0914 14:06:29.238976 10855 sgd_solver.cpp:106] Iteration 39500, lr = 1e-06
+I0914 14:06:44.774463 10855 solver.cpp:228] Iteration 39600, loss = 0.343824
+I0914 14:06:44.774559 10855 solver.cpp:244]     Train net output #0: loss = 0.200986 (* 1 = 0.200986 loss)
+I0914 14:06:44.774582 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19308 (* 0.1 = 0.119308 loss)
+I0914 14:06:44.774608 10855 sgd_solver.cpp:106] Iteration 39600, lr = 1e-06
+I0914 14:07:00.308447 10855 solver.cpp:228] Iteration 39700, loss = 0.307375
+I0914 14:07:00.308665 10855 solver.cpp:244]     Train net output #0: loss = 0.293819 (* 1 = 0.293819 loss)
+I0914 14:07:00.308691 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.26638 (* 0.1 = 0.126638 loss)
+I0914 14:07:00.308722 10855 sgd_solver.cpp:106] Iteration 39700, lr = 1e-06
+I0914 14:07:15.836524 10855 solver.cpp:228] Iteration 39800, loss = 0.326794
+I0914 14:07:15.836611 10855 solver.cpp:244]     Train net output #0: loss = 0.0924349 (* 1 = 0.0924349 loss)
+I0914 14:07:15.836633 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.983839 (* 0.1 = 0.0983839 loss)
+I0914 14:07:15.836653 10855 sgd_solver.cpp:106] Iteration 39800, lr = 1e-06
+I0914 14:07:31.370003 10855 solver.cpp:228] Iteration 39900, loss = 0.331785
+I0914 14:07:31.370278 10855 solver.cpp:244]     Train net output #0: loss = 0.280717 (* 1 = 0.280717 loss)
+I0914 14:07:31.370308 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.35454 (* 0.1 = 0.135454 loss)
+I0914 14:07:31.370324 10855 sgd_solver.cpp:106] Iteration 39900, lr = 1e-06
+I0914 14:07:46.740706 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_40000.caffemodel
+I0914 14:07:49.485158 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_40000.solverstate
+I0914 14:07:49.964030 10855 solver.cpp:337] Iteration 40000, Testing net (#0)
+I0914 14:07:56.546447 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83175
+I0914 14:07:56.546547 10855 solver.cpp:404]     Test net output #1: loss = 0.5095 (* 1 = 0.5095 loss)
+I0914 14:07:56.546571 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.49301 (* 0.1 = 0.149301 loss)
+I0914 14:07:56.616000 10855 solver.cpp:228] Iteration 40000, loss = 0.316052
+I0914 14:07:56.616073 10855 solver.cpp:244]     Train net output #0: loss = 0.244153 (* 1 = 0.244153 loss)
+I0914 14:07:56.616098 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.25784 (* 0.1 = 0.125784 loss)
+I0914 14:07:56.616124 10855 sgd_solver.cpp:106] Iteration 40000, lr = 1e-06
+I0914 14:08:12.142705 10855 solver.cpp:228] Iteration 40100, loss = 0.340327
+I0914 14:08:12.142910 10855 solver.cpp:244]     Train net output #0: loss = 0.353995 (* 1 = 0.353995 loss)
+I0914 14:08:12.142935 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.26965 (* 0.1 = 0.126965 loss)
+I0914 14:08:12.142958 10855 sgd_solver.cpp:106] Iteration 40100, lr = 1e-06
+I0914 14:08:27.671159 10855 solver.cpp:228] Iteration 40200, loss = 0.306988
+I0914 14:08:27.671257 10855 solver.cpp:244]     Train net output #0: loss = 0.0806327 (* 1 = 0.0806327 loss)
+I0914 14:08:27.671283 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.1233 (* 0.1 = 0.11233 loss)
+I0914 14:08:27.671304 10855 sgd_solver.cpp:106] Iteration 40200, lr = 1e-06
+I0914 14:08:43.203886 10855 solver.cpp:228] Iteration 40300, loss = 0.320555
+I0914 14:08:43.204078 10855 solver.cpp:244]     Train net output #0: loss = 0.167054 (* 1 = 0.167054 loss)
+I0914 14:08:43.204105 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.21401 (* 0.1 = 0.121401 loss)
+I0914 14:08:43.204134 10855 sgd_solver.cpp:106] Iteration 40300, lr = 1e-06
+I0914 14:08:58.738903 10855 solver.cpp:228] Iteration 40400, loss = 0.343886
+I0914 14:08:58.739004 10855 solver.cpp:244]     Train net output #0: loss = 0.329564 (* 1 = 0.329564 loss)
+I0914 14:08:58.739028 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.36562 (* 0.1 = 0.136562 loss)
+I0914 14:08:58.739048 10855 sgd_solver.cpp:106] Iteration 40400, lr = 1e-06
+I0914 14:09:14.271526 10855 solver.cpp:228] Iteration 40500, loss = 0.315404
+I0914 14:09:14.271800 10855 solver.cpp:244]     Train net output #0: loss = 0.398911 (* 1 = 0.398911 loss)
+I0914 14:09:14.271828 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.02608 (* 0.1 = 0.102608 loss)
+I0914 14:09:14.271854 10855 sgd_solver.cpp:106] Iteration 40500, lr = 1e-06
+I0914 14:09:29.797376 10855 solver.cpp:228] Iteration 40600, loss = 0.317319
+I0914 14:09:29.797478 10855 solver.cpp:244]     Train net output #0: loss = 0.157196 (* 1 = 0.157196 loss)
+I0914 14:09:29.797503 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.07246 (* 0.1 = 0.107246 loss)
+I0914 14:09:29.797524 10855 sgd_solver.cpp:106] Iteration 40600, lr = 1e-06
+I0914 14:09:45.322707 10855 solver.cpp:228] Iteration 40700, loss = 0.32256
+I0914 14:09:45.322916 10855 solver.cpp:244]     Train net output #0: loss = 0.255516 (* 1 = 0.255516 loss)
+I0914 14:09:45.322942 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.40135 (* 0.1 = 0.140135 loss)
+I0914 14:09:45.322966 10855 sgd_solver.cpp:106] Iteration 40700, lr = 1e-06
+I0914 14:10:00.858130 10855 solver.cpp:228] Iteration 40800, loss = 0.310008
+I0914 14:10:00.858237 10855 solver.cpp:244]     Train net output #0: loss = 0.168854 (* 1 = 0.168854 loss)
+I0914 14:10:00.858260 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.29745 (* 0.1 = 0.129745 loss)
+I0914 14:10:00.858283 10855 sgd_solver.cpp:106] Iteration 40800, lr = 1e-06
+I0914 14:10:16.389832 10855 solver.cpp:228] Iteration 40900, loss = 0.336999
+I0914 14:10:16.390071 10855 solver.cpp:244]     Train net output #0: loss = 0.17178 (* 1 = 0.17178 loss)
+I0914 14:10:16.390100 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27472 (* 0.1 = 0.127472 loss)
+I0914 14:10:16.390116 10855 sgd_solver.cpp:106] Iteration 40900, lr = 1e-06
+I0914 14:10:31.760288 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_41000.caffemodel
+I0914 14:10:34.801152 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_41000.solverstate
+I0914 14:10:35.282681 10855 solver.cpp:337] Iteration 41000, Testing net (#0)
+I0914 14:10:41.842257 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.833
+I0914 14:10:41.842345 10855 solver.cpp:404]     Test net output #1: loss = 0.506152 (* 1 = 0.506152 loss)
+I0914 14:10:41.842370 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.46476 (* 0.1 = 0.146476 loss)
+I0914 14:10:41.911625 10855 solver.cpp:228] Iteration 41000, loss = 0.308458
+I0914 14:10:41.911708 10855 solver.cpp:244]     Train net output #0: loss = 0.111222 (* 1 = 0.111222 loss)
+I0914 14:10:41.911734 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18264 (* 0.1 = 0.118264 loss)
+I0914 14:10:41.911774 10855 sgd_solver.cpp:106] Iteration 41000, lr = 1e-06
+I0914 14:10:57.445595 10855 solver.cpp:228] Iteration 41100, loss = 0.325238
+I0914 14:10:57.445878 10855 solver.cpp:244]     Train net output #0: loss = 0.152691 (* 1 = 0.152691 loss)
+I0914 14:10:57.445920 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.17822 (* 0.1 = 0.117822 loss)
+I0914 14:10:57.445945 10855 sgd_solver.cpp:106] Iteration 41100, lr = 1e-06
+I0914 14:11:12.973708 10855 solver.cpp:228] Iteration 41200, loss = 0.346638
+I0914 14:11:12.973798 10855 solver.cpp:244]     Train net output #0: loss = 0.320092 (* 1 = 0.320092 loss)
+I0914 14:11:12.973821 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.45196 (* 0.1 = 0.145196 loss)
+I0914 14:11:12.973843 10855 sgd_solver.cpp:106] Iteration 41200, lr = 1e-06
+I0914 14:11:28.505465 10855 solver.cpp:228] Iteration 41300, loss = 0.313421
+I0914 14:11:28.505726 10855 solver.cpp:244]     Train net output #0: loss = 0.246674 (* 1 = 0.246674 loss)
+I0914 14:11:28.505753 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.15158 (* 0.1 = 0.115158 loss)
+I0914 14:11:28.505775 10855 sgd_solver.cpp:106] Iteration 41300, lr = 1e-06
+I0914 14:11:44.043768 10855 solver.cpp:228] Iteration 41400, loss = 0.317051
+I0914 14:11:44.043865 10855 solver.cpp:244]     Train net output #0: loss = 0.0905445 (* 1 = 0.0905445 loss)
+I0914 14:11:44.043890 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.08014 (* 0.1 = 0.108014 loss)
+I0914 14:11:44.043911 10855 sgd_solver.cpp:106] Iteration 41400, lr = 1e-06
+I0914 14:11:59.574435 10855 solver.cpp:228] Iteration 41500, loss = 0.32233
+I0914 14:11:59.574630 10855 solver.cpp:244]     Train net output #0: loss = 0.185762 (* 1 = 0.185762 loss)
+I0914 14:11:59.574654 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.41007 (* 0.1 = 0.141007 loss)
+I0914 14:11:59.574684 10855 sgd_solver.cpp:106] Iteration 41500, lr = 1e-06
+I0914 14:12:15.100100 10855 solver.cpp:228] Iteration 41600, loss = 0.316219
+I0914 14:12:15.100188 10855 solver.cpp:244]     Train net output #0: loss = 0.15281 (* 1 = 0.15281 loss)
+I0914 14:12:15.100216 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23413 (* 0.1 = 0.123413 loss)
+I0914 14:12:15.100240 10855 sgd_solver.cpp:106] Iteration 41600, lr = 1e-06
+I0914 14:12:30.668129 10855 solver.cpp:228] Iteration 41700, loss = 0.324614
+I0914 14:12:30.668448 10855 solver.cpp:244]     Train net output #0: loss = 0.24776 (* 1 = 0.24776 loss)
+I0914 14:12:30.668509 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.07813 (* 0.1 = 0.107813 loss)
+I0914 14:12:30.668560 10855 sgd_solver.cpp:106] Iteration 41700, lr = 1e-06
+I0914 14:12:46.199930 10855 solver.cpp:228] Iteration 41800, loss = 0.304604
+I0914 14:12:46.200027 10855 solver.cpp:244]     Train net output #0: loss = 0.108215 (* 1 = 0.108215 loss)
+I0914 14:12:46.200052 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.31172 (* 0.1 = 0.131172 loss)
+I0914 14:12:46.200074 10855 sgd_solver.cpp:106] Iteration 41800, lr = 1e-06
+I0914 14:13:01.728128 10855 solver.cpp:228] Iteration 41900, loss = 0.323266
+I0914 14:13:01.728314 10855 solver.cpp:244]     Train net output #0: loss = 0.135753 (* 1 = 0.135753 loss)
+I0914 14:13:01.728341 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23881 (* 0.1 = 0.123881 loss)
+I0914 14:13:01.728366 10855 sgd_solver.cpp:106] Iteration 41900, lr = 1e-06
+I0914 14:13:17.102241 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_42000.caffemodel
+I0914 14:13:19.906415 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_42000.solverstate
+I0914 14:13:20.376974 10855 solver.cpp:337] Iteration 42000, Testing net (#0)
+I0914 14:13:26.954563 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83575
+I0914 14:13:26.954658 10855 solver.cpp:404]     Test net output #1: loss = 0.497528 (* 1 = 0.497528 loss)
+I0914 14:13:26.954680 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.46199 (* 0.1 = 0.146199 loss)
+I0914 14:13:27.023758 10855 solver.cpp:228] Iteration 42000, loss = 0.338215
+I0914 14:13:27.023844 10855 solver.cpp:244]     Train net output #0: loss = 0.196482 (* 1 = 0.196482 loss)
+I0914 14:13:27.023866 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28612 (* 0.1 = 0.128612 loss)
+I0914 14:13:27.023892 10855 sgd_solver.cpp:106] Iteration 42000, lr = 1e-06
+I0914 14:13:42.562216 10855 solver.cpp:228] Iteration 42100, loss = 0.317298
+I0914 14:13:42.562417 10855 solver.cpp:244]     Train net output #0: loss = 0.350589 (* 1 = 0.350589 loss)
+I0914 14:13:42.562444 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23383 (* 0.1 = 0.123383 loss)
+I0914 14:13:42.562474 10855 sgd_solver.cpp:106] Iteration 42100, lr = 1e-06
+I0914 14:13:58.098240 10855 solver.cpp:228] Iteration 42200, loss = 0.328014
+I0914 14:13:58.098331 10855 solver.cpp:244]     Train net output #0: loss = 0.165079 (* 1 = 0.165079 loss)
+I0914 14:13:58.098356 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.0582 (* 0.1 = 0.10582 loss)
+I0914 14:13:58.098382 10855 sgd_solver.cpp:106] Iteration 42200, lr = 1e-06
+I0914 14:14:13.638706 10855 solver.cpp:228] Iteration 42300, loss = 0.322677
+I0914 14:14:13.638977 10855 solver.cpp:244]     Train net output #0: loss = 0.221938 (* 1 = 0.221938 loss)
+I0914 14:14:13.639003 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.42639 (* 0.1 = 0.142639 loss)
+I0914 14:14:13.639025 10855 sgd_solver.cpp:106] Iteration 42300, lr = 1e-06
+I0914 14:14:29.177153 10855 solver.cpp:228] Iteration 42400, loss = 0.305437
+I0914 14:14:29.177237 10855 solver.cpp:244]     Train net output #0: loss = 0.111356 (* 1 = 0.111356 loss)
+I0914 14:14:29.177269 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18875 (* 0.1 = 0.118875 loss)
+I0914 14:14:29.177291 10855 sgd_solver.cpp:106] Iteration 42400, lr = 1e-06
+I0914 14:14:44.714648 10855 solver.cpp:228] Iteration 42500, loss = 0.322471
+I0914 14:14:44.714862 10855 solver.cpp:244]     Train net output #0: loss = 0.227702 (* 1 = 0.227702 loss)
+I0914 14:14:44.714889 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.35566 (* 0.1 = 0.135566 loss)
+I0914 14:14:44.714911 10855 sgd_solver.cpp:106] Iteration 42500, lr = 1e-06
+I0914 14:15:00.253237 10855 solver.cpp:228] Iteration 42600, loss = 0.307652
+I0914 14:15:00.253331 10855 solver.cpp:244]     Train net output #0: loss = 0.0896986 (* 1 = 0.0896986 loss)
+I0914 14:15:00.253356 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.25758 (* 0.1 = 0.125758 loss)
+I0914 14:15:00.253378 10855 sgd_solver.cpp:106] Iteration 42600, lr = 1e-06
+I0914 14:15:15.792774 10855 solver.cpp:228] Iteration 42700, loss = 0.342118
+I0914 14:15:15.792975 10855 solver.cpp:244]     Train net output #0: loss = 0.0902077 (* 1 = 0.0902077 loss)
+I0914 14:15:15.793002 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.09719 (* 0.1 = 0.109719 loss)
+I0914 14:15:15.793032 10855 sgd_solver.cpp:106] Iteration 42700, lr = 1e-06
+I0914 14:15:31.326838 10855 solver.cpp:228] Iteration 42800, loss = 0.340012
+I0914 14:15:31.326932 10855 solver.cpp:244]     Train net output #0: loss = 0.254846 (* 1 = 0.254846 loss)
+I0914 14:15:31.326956 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27945 (* 0.1 = 0.127945 loss)
+I0914 14:15:31.326978 10855 sgd_solver.cpp:106] Iteration 42800, lr = 1e-06
+I0914 14:15:46.862946 10855 solver.cpp:228] Iteration 42900, loss = 0.307541
+I0914 14:15:46.863101 10855 solver.cpp:244]     Train net output #0: loss = 0.233565 (* 1 = 0.233565 loss)
+I0914 14:15:46.863126 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22572 (* 0.1 = 0.122572 loss)
+I0914 14:15:46.863147 10855 sgd_solver.cpp:106] Iteration 42900, lr = 1e-06
+I0914 14:16:02.246059 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_43000.caffemodel
+I0914 14:16:05.309167 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_43000.solverstate
+I0914 14:16:05.781078 10855 solver.cpp:337] Iteration 43000, Testing net (#0)
+I0914 14:16:12.337569 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83025
+I0914 14:16:12.337676 10855 solver.cpp:404]     Test net output #1: loss = 0.509293 (* 1 = 0.509293 loss)
+I0914 14:16:12.337702 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.49284 (* 0.1 = 0.149284 loss)
+I0914 14:16:12.406785 10855 solver.cpp:228] Iteration 43000, loss = 0.325582
+I0914 14:16:12.406869 10855 solver.cpp:244]     Train net output #0: loss = 0.2613 (* 1 = 0.2613 loss)
+I0914 14:16:12.406893 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.0879 (* 0.1 = 0.10879 loss)
+I0914 14:16:12.406918 10855 sgd_solver.cpp:106] Iteration 43000, lr = 1e-06
+I0914 14:16:27.940915 10855 solver.cpp:228] Iteration 43100, loss = 0.327237
+I0914 14:16:27.941184 10855 solver.cpp:244]     Train net output #0: loss = 0.248607 (* 1 = 0.248607 loss)
+I0914 14:16:27.941213 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27378 (* 0.1 = 0.127378 loss)
+I0914 14:16:27.941239 10855 sgd_solver.cpp:106] Iteration 43100, lr = 1e-06
+I0914 14:16:43.473610 10855 solver.cpp:228] Iteration 43200, loss = 0.3131
+I0914 14:16:43.473716 10855 solver.cpp:244]     Train net output #0: loss = 0.0817497 (* 1 = 0.0817497 loss)
+I0914 14:16:43.473743 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.15726 (* 0.1 = 0.115726 loss)
+I0914 14:16:43.473769 10855 sgd_solver.cpp:106] Iteration 43200, lr = 1e-06
+I0914 14:16:58.999930 10855 solver.cpp:228] Iteration 43300, loss = 0.33761
+I0914 14:16:59.000134 10855 solver.cpp:244]     Train net output #0: loss = 0.177966 (* 1 = 0.177966 loss)
+I0914 14:16:59.000161 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19435 (* 0.1 = 0.119435 loss)
+I0914 14:16:59.000182 10855 sgd_solver.cpp:106] Iteration 43300, lr = 1e-06
+I0914 14:17:14.530150 10855 solver.cpp:228] Iteration 43400, loss = 0.302993
+I0914 14:17:14.530236 10855 solver.cpp:244]     Train net output #0: loss = 0.109198 (* 1 = 0.109198 loss)
+I0914 14:17:14.530261 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22355 (* 0.1 = 0.122355 loss)
+I0914 14:17:14.530297 10855 sgd_solver.cpp:106] Iteration 43400, lr = 1e-06
+I0914 14:17:30.053678 10855 solver.cpp:228] Iteration 43500, loss = 0.324467
+I0914 14:17:30.053869 10855 solver.cpp:244]     Train net output #0: loss = 0.0870254 (* 1 = 0.0870254 loss)
+I0914 14:17:30.053910 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.11659 (* 0.1 = 0.111659 loss)
+I0914 14:17:30.053932 10855 sgd_solver.cpp:106] Iteration 43500, lr = 1e-06
+I0914 14:17:45.582552 10855 solver.cpp:228] Iteration 43600, loss = 0.350599
+I0914 14:17:45.582651 10855 solver.cpp:244]     Train net output #0: loss = 0.183909 (* 1 = 0.183909 loss)
+I0914 14:17:45.582676 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.29621 (* 0.1 = 0.129621 loss)
+I0914 14:17:45.582698 10855 sgd_solver.cpp:106] Iteration 43600, lr = 1e-06
+I0914 14:18:01.110410 10855 solver.cpp:228] Iteration 43700, loss = 0.301783
+I0914 14:18:01.110651 10855 solver.cpp:244]     Train net output #0: loss = 0.295822 (* 1 = 0.295822 loss)
+I0914 14:18:01.110682 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.2158 (* 0.1 = 0.12158 loss)
+I0914 14:18:01.110698 10855 sgd_solver.cpp:106] Iteration 43700, lr = 1e-06
+I0914 14:18:16.620569 10855 solver.cpp:228] Iteration 43800, loss = 0.331
+I0914 14:18:16.620663 10855 solver.cpp:244]     Train net output #0: loss = 0.11655 (* 1 = 0.11655 loss)
+I0914 14:18:16.620689 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.02197 (* 0.1 = 0.102197 loss)
+I0914 14:18:16.620708 10855 sgd_solver.cpp:106] Iteration 43800, lr = 1e-06
+I0914 14:18:32.155079 10855 solver.cpp:228] Iteration 43900, loss = 0.318824
+I0914 14:18:32.155292 10855 solver.cpp:244]     Train net output #0: loss = 0.230025 (* 1 = 0.230025 loss)
+I0914 14:18:32.155318 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.44755 (* 0.1 = 0.144755 loss)
+I0914 14:18:32.155340 10855 sgd_solver.cpp:106] Iteration 43900, lr = 1e-06
+I0914 14:18:47.532814 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_44000.caffemodel
+I0914 14:18:53.791653 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_44000.solverstate
+I0914 14:18:54.258668 10855 solver.cpp:337] Iteration 44000, Testing net (#0)
+I0914 14:19:00.603016 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83325
+I0914 14:19:00.603112 10855 solver.cpp:404]     Test net output #1: loss = 0.506797 (* 1 = 0.506797 loss)
+I0914 14:19:00.603137 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.4626 (* 0.1 = 0.14626 loss)
+I0914 14:19:00.670819 10855 solver.cpp:228] Iteration 44000, loss = 0.316621
+I0914 14:19:00.670894 10855 solver.cpp:244]     Train net output #0: loss = 0.100327 (* 1 = 0.100327 loss)
+I0914 14:19:00.670918 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.17802 (* 0.1 = 0.117802 loss)
+I0914 14:19:00.670943 10855 sgd_solver.cpp:106] Iteration 44000, lr = 1e-06
+I0914 14:19:15.989857 10855 solver.cpp:228] Iteration 44100, loss = 0.341911
+I0914 14:19:15.990129 10855 solver.cpp:244]     Train net output #0: loss = 0.342673 (* 1 = 0.342673 loss)
+I0914 14:19:15.990157 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28048 (* 0.1 = 0.128048 loss)
+I0914 14:19:15.990178 10855 sgd_solver.cpp:106] Iteration 44100, lr = 1e-06
+I0914 14:19:31.522300 10855 solver.cpp:228] Iteration 44200, loss = 0.310552
+I0914 14:19:31.522399 10855 solver.cpp:244]     Train net output #0: loss = 0.0950407 (* 1 = 0.0950407 loss)
+I0914 14:19:31.522423 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.08938 (* 0.1 = 0.108938 loss)
+I0914 14:19:31.522449 10855 sgd_solver.cpp:106] Iteration 44200, lr = 1e-06
+I0914 14:19:47.052917 10855 solver.cpp:228] Iteration 44300, loss = 0.328878
+I0914 14:19:47.053107 10855 solver.cpp:244]     Train net output #0: loss = 0.176915 (* 1 = 0.176915 loss)
+I0914 14:19:47.053133 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.14408 (* 0.1 = 0.114408 loss)
+I0914 14:19:47.053165 10855 sgd_solver.cpp:106] Iteration 44300, lr = 1e-06
+I0914 14:20:02.582762 10855 solver.cpp:228] Iteration 44400, loss = 0.355205
+I0914 14:20:02.582862 10855 solver.cpp:244]     Train net output #0: loss = 0.232361 (* 1 = 0.232361 loss)
+I0914 14:20:02.582888 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34628 (* 0.1 = 0.134628 loss)
+I0914 14:20:02.582911 10855 sgd_solver.cpp:106] Iteration 44400, lr = 1e-06
+I0914 14:20:18.114959 10855 solver.cpp:228] Iteration 44500, loss = 0.321704
+I0914 14:20:18.115212 10855 solver.cpp:244]     Train net output #0: loss = 0.366425 (* 1 = 0.366425 loss)
+I0914 14:20:18.115239 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22198 (* 0.1 = 0.122198 loss)
+I0914 14:20:18.115268 10855 sgd_solver.cpp:106] Iteration 44500, lr = 1e-06
+I0914 14:20:33.651449 10855 solver.cpp:228] Iteration 44600, loss = 0.318707
+I0914 14:20:33.651535 10855 solver.cpp:244]     Train net output #0: loss = 0.17296 (* 1 = 0.17296 loss)
+I0914 14:20:33.651561 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.07711 (* 0.1 = 0.107711 loss)
+I0914 14:20:33.651584 10855 sgd_solver.cpp:106] Iteration 44600, lr = 1e-06
+I0914 14:20:49.182627 10855 solver.cpp:228] Iteration 44700, loss = 0.299527
+I0914 14:20:49.182837 10855 solver.cpp:244]     Train net output #0: loss = 0.276633 (* 1 = 0.276633 loss)
+I0914 14:20:49.182862 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.35015 (* 0.1 = 0.135015 loss)
+I0914 14:20:49.182893 10855 sgd_solver.cpp:106] Iteration 44700, lr = 1e-06
+I0914 14:21:04.716925 10855 solver.cpp:228] Iteration 44800, loss = 0.307149
+I0914 14:21:04.717020 10855 solver.cpp:244]     Train net output #0: loss = 0.132181 (* 1 = 0.132181 loss)
+I0914 14:21:04.717043 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.40638 (* 0.1 = 0.140638 loss)
+I0914 14:21:04.717067 10855 sgd_solver.cpp:106] Iteration 44800, lr = 1e-06
+I0914 14:21:20.249146 10855 solver.cpp:228] Iteration 44900, loss = 0.331243
+I0914 14:21:20.249348 10855 solver.cpp:244]     Train net output #0: loss = 0.328591 (* 1 = 0.328591 loss)
+I0914 14:21:20.249377 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19305 (* 0.1 = 0.119305 loss)
+I0914 14:21:20.249402 10855 sgd_solver.cpp:106] Iteration 44900, lr = 1e-06
+I0914 14:21:35.630698 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_45000.caffemodel
+I0914 14:21:37.860671 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_45000.solverstate
+I0914 14:21:38.346897 10855 solver.cpp:337] Iteration 45000, Testing net (#0)
+I0914 14:21:44.959751 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83775
+I0914 14:21:44.959856 10855 solver.cpp:404]     Test net output #1: loss = 0.497989 (* 1 = 0.497989 loss)
+I0914 14:21:44.959880 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.45635 (* 0.1 = 0.145635 loss)
+I0914 14:21:45.029103 10855 solver.cpp:228] Iteration 45000, loss = 0.313344
+I0914 14:21:45.029193 10855 solver.cpp:244]     Train net output #0: loss = 0.10445 (* 1 = 0.10445 loss)
+I0914 14:21:45.029218 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.20979 (* 0.1 = 0.120979 loss)
+I0914 14:21:45.029239 10855 sgd_solver.cpp:46] MultiStep Status: Iteration 45000, step = 3
+I0914 14:21:45.029268 10855 sgd_solver.cpp:106] Iteration 45000, lr = 1e-07
+I0914 14:22:00.565681 10855 solver.cpp:228] Iteration 45100, loss = 0.316903
+I0914 14:22:00.565901 10855 solver.cpp:244]     Train net output #0: loss = 0.114555 (* 1 = 0.114555 loss)
+I0914 14:22:00.565929 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.31953 (* 0.1 = 0.131953 loss)
+I0914 14:22:00.565964 10855 sgd_solver.cpp:106] Iteration 45100, lr = 1e-07
+I0914 14:22:16.099308 10855 solver.cpp:228] Iteration 45200, loss = 0.348356
+I0914 14:22:16.099390 10855 solver.cpp:244]     Train net output #0: loss = 0.411978 (* 1 = 0.411978 loss)
+I0914 14:22:16.099413 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.36666 (* 0.1 = 0.136666 loss)
+I0914 14:22:16.099436 10855 sgd_solver.cpp:106] Iteration 45200, lr = 1e-07
+I0914 14:22:31.634694 10855 solver.cpp:228] Iteration 45300, loss = 0.317677
+I0914 14:22:31.634897 10855 solver.cpp:244]     Train net output #0: loss = 0.373998 (* 1 = 0.373998 loss)
+I0914 14:22:31.634924 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22898 (* 0.1 = 0.122898 loss)
+I0914 14:22:31.634951 10855 sgd_solver.cpp:106] Iteration 45300, lr = 1e-07
+I0914 14:22:47.166832 10855 solver.cpp:228] Iteration 45400, loss = 0.319018
+I0914 14:22:47.166931 10855 solver.cpp:244]     Train net output #0: loss = 0.15655 (* 1 = 0.15655 loss)
+I0914 14:22:47.166957 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.01551 (* 0.1 = 0.101551 loss)
+I0914 14:22:47.166980 10855 sgd_solver.cpp:106] Iteration 45400, lr = 1e-07
+I0914 14:23:02.703047 10855 solver.cpp:228] Iteration 45500, loss = 0.311767
+I0914 14:23:02.703230 10855 solver.cpp:244]     Train net output #0: loss = 0.244468 (* 1 = 0.244468 loss)
+I0914 14:23:02.703258 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.39275 (* 0.1 = 0.139275 loss)
+I0914 14:23:02.703285 10855 sgd_solver.cpp:106] Iteration 45500, lr = 1e-07
+I0914 14:23:18.228991 10855 solver.cpp:228] Iteration 45600, loss = 0.299343
+I0914 14:23:18.229081 10855 solver.cpp:244]     Train net output #0: loss = 0.0960734 (* 1 = 0.0960734 loss)
+I0914 14:23:18.229106 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.33739 (* 0.1 = 0.133739 loss)
+I0914 14:23:18.229128 10855 sgd_solver.cpp:106] Iteration 45600, lr = 1e-07
+I0914 14:23:33.755187 10855 solver.cpp:228] Iteration 45700, loss = 0.332594
+I0914 14:23:33.755386 10855 solver.cpp:244]     Train net output #0: loss = 0.228219 (* 1 = 0.228219 loss)
+I0914 14:23:33.755414 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.41517 (* 0.1 = 0.141517 loss)
+I0914 14:23:33.755437 10855 sgd_solver.cpp:106] Iteration 45700, lr = 1e-07
+I0914 14:23:49.280158 10855 solver.cpp:228] Iteration 45800, loss = 0.314504
+I0914 14:23:49.280261 10855 solver.cpp:244]     Train net output #0: loss = 0.0673686 (* 1 = 0.0673686 loss)
+I0914 14:23:49.280284 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.29029 (* 0.1 = 0.129029 loss)
+I0914 14:23:49.280305 10855 sgd_solver.cpp:106] Iteration 45800, lr = 1e-07
+I0914 14:24:04.809989 10855 solver.cpp:228] Iteration 45900, loss = 0.308051
+I0914 14:24:04.810194 10855 solver.cpp:244]     Train net output #0: loss = 0.131358 (* 1 = 0.131358 loss)
+I0914 14:24:04.810222 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.04198 (* 0.1 = 0.104198 loss)
+I0914 14:24:04.810245 10855 sgd_solver.cpp:106] Iteration 45900, lr = 1e-07
+I0914 14:24:20.185493 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_46000.caffemodel
+I0914 14:24:25.272908 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_46000.solverstate
+I0914 14:24:25.745386 10855 solver.cpp:337] Iteration 46000, Testing net (#0)
+I0914 14:24:32.140130 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83075
+I0914 14:24:32.140223 10855 solver.cpp:404]     Test net output #1: loss = 0.509919 (* 1 = 0.509919 loss)
+I0914 14:24:32.140246 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.48452 (* 0.1 = 0.148452 loss)
+I0914 14:24:32.208658 10855 solver.cpp:228] Iteration 46000, loss = 0.337176
+I0914 14:24:32.208735 10855 solver.cpp:244]     Train net output #0: loss = 0.269674 (* 1 = 0.269674 loss)
+I0914 14:24:32.208758 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.50851 (* 0.1 = 0.150851 loss)
+I0914 14:24:32.208786 10855 sgd_solver.cpp:106] Iteration 46000, lr = 1e-07
+I0914 14:24:47.642616 10855 solver.cpp:228] Iteration 46100, loss = 0.308421
+I0914 14:24:47.642877 10855 solver.cpp:244]     Train net output #0: loss = 0.365582 (* 1 = 0.365582 loss)
+I0914 14:24:47.642906 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.13317 (* 0.1 = 0.113317 loss)
+I0914 14:24:47.642930 10855 sgd_solver.cpp:106] Iteration 46100, lr = 1e-07
+I0914 14:25:03.173409 10855 solver.cpp:228] Iteration 46200, loss = 0.310397
+I0914 14:25:03.173504 10855 solver.cpp:244]     Train net output #0: loss = 0.0838891 (* 1 = 0.0838891 loss)
+I0914 14:25:03.173529 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.98374 (* 0.1 = 0.098374 loss)
+I0914 14:25:03.173563 10855 sgd_solver.cpp:106] Iteration 46200, lr = 1e-07
+I0914 14:25:18.728014 10855 solver.cpp:228] Iteration 46300, loss = 0.298214
+I0914 14:25:18.728308 10855 solver.cpp:244]     Train net output #0: loss = 0.165677 (* 1 = 0.165677 loss)
+I0914 14:25:18.728374 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.28142 (* 0.1 = 0.128142 loss)
+I0914 14:25:18.728420 10855 sgd_solver.cpp:106] Iteration 46300, lr = 1e-07
+I0914 14:25:34.305258 10855 solver.cpp:228] Iteration 46400, loss = 0.309147
+I0914 14:25:34.305400 10855 solver.cpp:244]     Train net output #0: loss = 0.17498 (* 1 = 0.17498 loss)
+I0914 14:25:34.305428 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.38862 (* 0.1 = 0.138862 loss)
+I0914 14:25:34.305464 10855 sgd_solver.cpp:106] Iteration 46400, lr = 1e-07
+I0914 14:25:49.833014 10855 solver.cpp:228] Iteration 46500, loss = 0.32659
+I0914 14:25:49.833223 10855 solver.cpp:244]     Train net output #0: loss = 0.280808 (* 1 = 0.280808 loss)
+I0914 14:25:49.833250 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.29567 (* 0.1 = 0.129567 loss)
+I0914 14:25:49.833277 10855 sgd_solver.cpp:106] Iteration 46500, lr = 1e-07
+I0914 14:26:05.356533 10855 solver.cpp:228] Iteration 46600, loss = 0.309346
+I0914 14:26:05.356621 10855 solver.cpp:244]     Train net output #0: loss = 0.153654 (* 1 = 0.153654 loss)
+I0914 14:26:05.356647 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19235 (* 0.1 = 0.119235 loss)
+I0914 14:26:05.356668 10855 sgd_solver.cpp:106] Iteration 46600, lr = 1e-07
+I0914 14:26:20.886126 10855 solver.cpp:228] Iteration 46700, loss = 0.324941
+I0914 14:26:20.886348 10855 solver.cpp:244]     Train net output #0: loss = 0.0921325 (* 1 = 0.0921325 loss)
+I0914 14:26:20.886375 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.34824 (* 0.1 = 0.134824 loss)
+I0914 14:26:20.886402 10855 sgd_solver.cpp:106] Iteration 46700, lr = 1e-07
+I0914 14:26:36.416019 10855 solver.cpp:228] Iteration 46800, loss = 0.348995
+I0914 14:26:36.416117 10855 solver.cpp:244]     Train net output #0: loss = 0.334933 (* 1 = 0.334933 loss)
+I0914 14:26:36.416142 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.40049 (* 0.1 = 0.140049 loss)
+I0914 14:26:36.416170 10855 sgd_solver.cpp:106] Iteration 46800, lr = 1e-07
+I0914 14:26:51.945442 10855 solver.cpp:228] Iteration 46900, loss = 0.306741
+I0914 14:26:51.945765 10855 solver.cpp:244]     Train net output #0: loss = 0.423701 (* 1 = 0.423701 loss)
+I0914 14:26:51.945794 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23892 (* 0.1 = 0.123892 loss)
+I0914 14:26:51.945819 10855 sgd_solver.cpp:106] Iteration 46900, lr = 1e-07
+I0914 14:27:07.422384 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_47000.caffemodel
+I0914 14:27:14.233085 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_47000.solverstate
+I0914 14:27:14.712707 10855 solver.cpp:337] Iteration 47000, Testing net (#0)
+I0914 14:27:21.960192 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83275
+I0914 14:27:21.960387 10855 solver.cpp:404]     Test net output #1: loss = 0.506763 (* 1 = 0.506763 loss)
+I0914 14:27:21.960413 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.45945 (* 0.1 = 0.145945 loss)
+I0914 14:27:22.029672 10855 solver.cpp:228] Iteration 47000, loss = 0.326128
+I0914 14:27:22.029749 10855 solver.cpp:244]     Train net output #0: loss = 0.0847004 (* 1 = 0.0847004 loss)
+I0914 14:27:22.029773 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.01165 (* 0.1 = 0.101165 loss)
+I0914 14:27:22.029800 10855 sgd_solver.cpp:106] Iteration 47000, lr = 1e-07
+I0914 14:27:37.556445 10855 solver.cpp:228] Iteration 47100, loss = 0.307963
+I0914 14:27:37.556536 10855 solver.cpp:244]     Train net output #0: loss = 0.225891 (* 1 = 0.225891 loss)
+I0914 14:27:37.556560 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32159 (* 0.1 = 0.132159 loss)
+I0914 14:27:37.556584 10855 sgd_solver.cpp:106] Iteration 47100, lr = 1e-07
+I0914 14:27:53.089185 10855 solver.cpp:228] Iteration 47200, loss = 0.304759
+I0914 14:27:53.089370 10855 solver.cpp:244]     Train net output #0: loss = 0.147769 (* 1 = 0.147769 loss)
+I0914 14:27:53.089397 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.37519 (* 0.1 = 0.137519 loss)
+I0914 14:27:53.089421 10855 sgd_solver.cpp:106] Iteration 47200, lr = 1e-07
+I0914 14:28:08.621601 10855 solver.cpp:228] Iteration 47300, loss = 0.339989
+I0914 14:28:08.621722 10855 solver.cpp:244]     Train net output #0: loss = 0.207755 (* 1 = 0.207755 loss)
+I0914 14:28:08.621748 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.15981 (* 0.1 = 0.115981 loss)
+I0914 14:28:08.621772 10855 sgd_solver.cpp:106] Iteration 47300, lr = 1e-07
+I0914 14:28:24.155743 10855 solver.cpp:228] Iteration 47400, loss = 0.311791
+I0914 14:28:24.155956 10855 solver.cpp:244]     Train net output #0: loss = 0.0781513 (* 1 = 0.0781513 loss)
+I0914 14:28:24.155984 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.1194 (* 0.1 = 0.11194 loss)
+I0914 14:28:24.156008 10855 sgd_solver.cpp:106] Iteration 47400, lr = 1e-07
+I0914 14:28:39.688490 10855 solver.cpp:228] Iteration 47500, loss = 0.324222
+I0914 14:28:39.688592 10855 solver.cpp:244]     Train net output #0: loss = 0.133296 (* 1 = 0.133296 loss)
+I0914 14:28:39.688617 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.18081 (* 0.1 = 0.118081 loss)
+I0914 14:28:39.688639 10855 sgd_solver.cpp:106] Iteration 47500, lr = 1e-07
+I0914 14:29:01.994122 10855 solver.cpp:228] Iteration 47600, loss = 0.336702
+I0914 14:29:01.994503 10855 solver.cpp:244]     Train net output #0: loss = 0.312851 (* 1 = 0.312851 loss)
+I0914 14:29:01.994565 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.38119 (* 0.1 = 0.138119 loss)
+I0914 14:29:01.994602 10855 sgd_solver.cpp:106] Iteration 47600, lr = 1e-07
+I0914 14:29:24.190546 10855 solver.cpp:228] Iteration 47700, loss = 0.318805
+I0914 14:29:24.190649 10855 solver.cpp:244]     Train net output #0: loss = 0.384427 (* 1 = 0.384427 loss)
+I0914 14:29:24.190675 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.26258 (* 0.1 = 0.126258 loss)
+I0914 14:29:24.190697 10855 sgd_solver.cpp:106] Iteration 47700, lr = 1e-07
+I0914 14:29:46.386127 10855 solver.cpp:228] Iteration 47800, loss = 0.322699
+I0914 14:29:46.386446 10855 solver.cpp:244]     Train net output #0: loss = 0.103022 (* 1 = 0.103022 loss)
+I0914 14:29:46.386476 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.965042 (* 0.1 = 0.0965042 loss)
+I0914 14:29:46.386499 10855 sgd_solver.cpp:106] Iteration 47800, lr = 1e-07
+I0914 14:30:08.585721 10855 solver.cpp:228] Iteration 47900, loss = 0.305551
+I0914 14:30:08.585805 10855 solver.cpp:244]     Train net output #0: loss = 0.367378 (* 1 = 0.367378 loss)
+I0914 14:30:08.585830 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.36462 (* 0.1 = 0.136462 loss)
+I0914 14:30:08.585855 10855 sgd_solver.cpp:106] Iteration 47900, lr = 1e-07
+I0914 14:30:30.627540 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_48000.caffemodel
+I0914 14:30:33.448928 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_48000.solverstate
+I0914 14:30:33.898414 10855 solver.cpp:337] Iteration 48000, Testing net (#0)
+I0914 14:30:45.869205 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.8385
+I0914 14:30:45.869313 10855 solver.cpp:404]     Test net output #1: loss = 0.497525 (* 1 = 0.497525 loss)
+I0914 14:30:45.869338 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.45907 (* 0.1 = 0.145907 loss)
+I0914 14:30:45.938513 10855 solver.cpp:228] Iteration 48000, loss = 0.303464
+I0914 14:30:45.938601 10855 solver.cpp:244]     Train net output #0: loss = 0.12452 (* 1 = 0.12452 loss)
+I0914 14:30:45.938624 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.41602 (* 0.1 = 0.141602 loss)
+I0914 14:30:45.938652 10855 sgd_solver.cpp:106] Iteration 48000, lr = 1e-07
+I0914 14:31:08.159472 10855 solver.cpp:228] Iteration 48100, loss = 0.335522
+I0914 14:31:08.159699 10855 solver.cpp:244]     Train net output #0: loss = 0.237792 (* 1 = 0.237792 loss)
+I0914 14:31:08.159726 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.23091 (* 0.1 = 0.123091 loss)
+I0914 14:31:08.159752 10855 sgd_solver.cpp:106] Iteration 48100, lr = 1e-07
+I0914 14:31:33.750955 10855 solver.cpp:228] Iteration 48200, loss = 0.320256
+I0914 14:31:33.751056 10855 solver.cpp:244]     Train net output #0: loss = 0.0938128 (* 1 = 0.0938128 loss)
+I0914 14:31:33.751082 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.19555 (* 0.1 = 0.119555 loss)
+I0914 14:31:33.751104 10855 sgd_solver.cpp:106] Iteration 48200, lr = 1e-07
+I0914 14:31:52.598587 10855 solver.cpp:228] Iteration 48300, loss = 0.322394
+I0914 14:31:52.598754 10855 solver.cpp:244]     Train net output #0: loss = 0.124513 (* 1 = 0.124513 loss)
+I0914 14:31:52.598783 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.03044 (* 0.1 = 0.103044 loss)
+I0914 14:31:52.598806 10855 sgd_solver.cpp:106] Iteration 48300, lr = 1e-07
+I0914 14:32:08.124629 10855 solver.cpp:228] Iteration 48400, loss = 0.343167
+I0914 14:32:08.124727 10855 solver.cpp:244]     Train net output #0: loss = 0.293555 (* 1 = 0.293555 loss)
+I0914 14:32:08.124752 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32579 (* 0.1 = 0.132579 loss)
+I0914 14:32:08.124776 10855 sgd_solver.cpp:106] Iteration 48400, lr = 1e-07
+I0914 14:32:23.649996 10855 solver.cpp:228] Iteration 48500, loss = 0.317833
+I0914 14:32:23.650240 10855 solver.cpp:244]     Train net output #0: loss = 0.28306 (* 1 = 0.28306 loss)
+I0914 14:32:23.650270 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.09639 (* 0.1 = 0.109639 loss)
+I0914 14:32:23.650286 10855 sgd_solver.cpp:106] Iteration 48500, lr = 1e-07
+I0914 14:32:39.184600 10855 solver.cpp:228] Iteration 48600, loss = 0.323019
+I0914 14:32:39.184685 10855 solver.cpp:244]     Train net output #0: loss = 0.140574 (* 1 = 0.140574 loss)
+I0914 14:32:39.184710 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.996087 (* 0.1 = 0.0996087 loss)
+I0914 14:32:39.184732 10855 sgd_solver.cpp:106] Iteration 48600, lr = 1e-07
+I0914 14:32:54.717779 10855 solver.cpp:228] Iteration 48700, loss = 0.312429
+I0914 14:32:54.718063 10855 solver.cpp:244]     Train net output #0: loss = 0.336024 (* 1 = 0.336024 loss)
+I0914 14:32:54.718091 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.39717 (* 0.1 = 0.139717 loss)
+I0914 14:32:54.718117 10855 sgd_solver.cpp:106] Iteration 48700, lr = 1e-07
+I0914 14:33:10.251920 10855 solver.cpp:228] Iteration 48800, loss = 0.312776
+I0914 14:33:10.252009 10855 solver.cpp:244]     Train net output #0: loss = 0.121274 (* 1 = 0.121274 loss)
+I0914 14:33:10.252034 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.40496 (* 0.1 = 0.140496 loss)
+I0914 14:33:10.252058 10855 sgd_solver.cpp:106] Iteration 48800, lr = 1e-07
+I0914 14:33:25.782140 10855 solver.cpp:228] Iteration 48900, loss = 0.330171
+I0914 14:33:25.782311 10855 solver.cpp:244]     Train net output #0: loss = 0.308413 (* 1 = 0.308413 loss)
+I0914 14:33:25.782338 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.37173 (* 0.1 = 0.137173 loss)
+I0914 14:33:25.782362 10855 sgd_solver.cpp:106] Iteration 48900, lr = 1e-07
+I0914 14:33:41.158701 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_49000.caffemodel
+I0914 14:33:42.315331 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_49000.solverstate
+I0914 14:33:42.776540 10855 solver.cpp:337] Iteration 49000, Testing net (#0)
+I0914 14:33:49.428622 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.831
+I0914 14:33:49.428712 10855 solver.cpp:404]     Test net output #1: loss = 0.509664 (* 1 = 0.509664 loss)
+I0914 14:33:49.428736 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.48668 (* 0.1 = 0.148668 loss)
+I0914 14:33:49.497231 10855 solver.cpp:228] Iteration 49000, loss = 0.300897
+I0914 14:33:49.497321 10855 solver.cpp:244]     Train net output #0: loss = 0.23385 (* 1 = 0.23385 loss)
+I0914 14:33:49.497345 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.2921 (* 0.1 = 0.12921 loss)
+I0914 14:33:49.497373 10855 sgd_solver.cpp:106] Iteration 49000, lr = 1e-07
+I0914 14:34:05.000538 10855 solver.cpp:228] Iteration 49100, loss = 0.320825
+I0914 14:34:05.000753 10855 solver.cpp:244]     Train net output #0: loss = 0.202402 (* 1 = 0.202402 loss)
+I0914 14:34:05.000780 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.3862 (* 0.1 = 0.13862 loss)
+I0914 14:34:05.000805 10855 sgd_solver.cpp:106] Iteration 49100, lr = 1e-07
+I0914 14:34:20.532328 10855 solver.cpp:228] Iteration 49200, loss = 0.350591
+I0914 14:34:20.532430 10855 solver.cpp:244]     Train net output #0: loss = 0.255951 (* 1 = 0.255951 loss)
+I0914 14:34:20.532456 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27595 (* 0.1 = 0.127595 loss)
+I0914 14:34:20.532480 10855 sgd_solver.cpp:106] Iteration 49200, lr = 1e-07
+I0914 14:34:36.070363 10855 solver.cpp:228] Iteration 49300, loss = 0.320402
+I0914 14:34:36.070516 10855 solver.cpp:244]     Train net output #0: loss = 0.296088 (* 1 = 0.296088 loss)
+I0914 14:34:36.070543 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32708 (* 0.1 = 0.132708 loss)
+I0914 14:34:36.070566 10855 sgd_solver.cpp:106] Iteration 49300, lr = 1e-07
+I0914 14:34:51.606256 10855 solver.cpp:228] Iteration 49400, loss = 0.316019
+I0914 14:34:51.606355 10855 solver.cpp:244]     Train net output #0: loss = 0.220478 (* 1 = 0.220478 loss)
+I0914 14:34:51.606381 10855 solver.cpp:244]     Train net output #1: loss_hashing = 0.980576 (* 0.1 = 0.0980576 loss)
+I0914 14:34:51.606403 10855 sgd_solver.cpp:106] Iteration 49400, lr = 1e-07
+I0914 14:35:07.138048 10855 solver.cpp:228] Iteration 49500, loss = 0.316951
+I0914 14:35:07.138238 10855 solver.cpp:244]     Train net output #0: loss = 0.204787 (* 1 = 0.204787 loss)
+I0914 14:35:07.138265 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.46633 (* 0.1 = 0.146633 loss)
+I0914 14:35:07.138293 10855 sgd_solver.cpp:106] Iteration 49500, lr = 1e-07
+I0914 14:35:22.694810 10855 solver.cpp:228] Iteration 49600, loss = 0.304719
+I0914 14:35:22.694927 10855 solver.cpp:244]     Train net output #0: loss = 0.161271 (* 1 = 0.161271 loss)
+I0914 14:35:22.694965 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.32761 (* 0.1 = 0.132761 loss)
+I0914 14:35:22.695008 10855 sgd_solver.cpp:106] Iteration 49600, lr = 1e-07
+I0914 14:35:38.252825 10855 solver.cpp:228] Iteration 49700, loss = 0.330556
+I0914 14:35:38.253123 10855 solver.cpp:244]     Train net output #0: loss = 0.339749 (* 1 = 0.339749 loss)
+I0914 14:35:38.253170 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.27468 (* 0.1 = 0.127468 loss)
+I0914 14:35:38.253208 10855 sgd_solver.cpp:106] Iteration 49700, lr = 1e-07
+I0914 14:35:53.811507 10855 solver.cpp:228] Iteration 49800, loss = 0.302762
+I0914 14:35:53.811626 10855 solver.cpp:244]     Train net output #0: loss = 0.0945444 (* 1 = 0.0945444 loss)
+I0914 14:35:53.811666 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.25585 (* 0.1 = 0.125585 loss)
+I0914 14:35:53.811707 10855 sgd_solver.cpp:106] Iteration 49800, lr = 1e-07
+I0914 14:36:09.371052 10855 solver.cpp:228] Iteration 49900, loss = 0.324026
+I0914 14:36:09.371232 10855 solver.cpp:244]     Train net output #0: loss = 0.143217 (* 1 = 0.143217 loss)
+I0914 14:36:09.371273 10855 solver.cpp:244]     Train net output #1: loss_hashing = 1.22967 (* 0.1 = 0.122967 loss)
+I0914 14:36:09.371317 10855 sgd_solver.cpp:106] Iteration 49900, lr = 1e-07
+I0914 14:36:24.771685 10855 solver.cpp:454] Snapshotting to binary proto file COLOR/color_alexnet_iter_50000.caffemodel
+I0914 14:36:31.357934 10855 sgd_solver.cpp:273] Snapshotting solver state to binary proto file COLOR/color_alexnet_iter_50000.solverstate
+I0914 14:36:32.208703 10855 solver.cpp:317] Iteration 50000, loss = 0.350087
+I0914 14:36:32.208798 10855 solver.cpp:337] Iteration 50000, Testing net (#0)
+I0914 14:36:38.483525 10855 solver.cpp:404]     Test net output #0: accuracy_at_1_Color = 0.83425
+I0914 14:36:38.483652 10855 solver.cpp:404]     Test net output #1: loss = 0.506856 (* 1 = 0.506856 loss)
+I0914 14:36:38.483698 10855 solver.cpp:404]     Test net output #2: loss_hashing = 1.46055 (* 0.1 = 0.146055 loss)
+I0914 14:36:38.483737 10855 solver.cpp:322] Optimization Done.
+I0914 14:36:38.483769 10855 caffe.cpp:222] Optimization Done.

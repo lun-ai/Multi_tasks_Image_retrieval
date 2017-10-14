@@ -1,0 +1,4 @@
+*.dat
+*.caffemodel
+*.solverstate
+*.mat

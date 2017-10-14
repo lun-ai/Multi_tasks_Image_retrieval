@@ -1,0 +1,28 @@
+net: "FASHION/finetune_vgg_model.prototxt"
+
+# test config
+test_iter: 200
+test_interval: 1000
+test_initialization: true
+
+# progress & policy config
+base_lr: 1e-05
+lr_policy: "multistep"
+stepvalue:20000
+stepvalue:35000
+stepvalue:45000
+stepvalue:52000
+max_iter: 60000
+momentum: 0.9
+weight_decay: 4e-05
+gamma: 0.1
+average_loss: 100
+
+# display config
+display: 100
+snapshot: 5000
+snapshot_prefix: "FASHION/fashion_f48"
+
+# solver config
+solver_mode: GPU
+device_id:1

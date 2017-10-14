@@ -1,0 +1,27 @@
+net: "COLOR/train_alexnet_model.prototxt"
+
+# test config
+test_iter: 100
+test_interval: 1000
+test_initialization: true
+
+# progress & policy config
+base_lr: 0.0001
+lr_policy: "multistep"
+stepvalue:12000
+stepvalue:35000
+stepvalue:45000
+max_iter: 50000
+momentum: 0.9
+weight_decay: 0.0004
+gamma: 0.1
+average_loss: 100
+
+# display config
+display: 100
+snapshot: 1000
+snapshot_prefix: "COLOR/color_alexnet"
+
+# solver config
+solver_mode: GPU
+device_id:1
